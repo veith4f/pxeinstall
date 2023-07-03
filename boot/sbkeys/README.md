@@ -1,0 +1,1 @@
+Place db.key and db.crt from the set of your Secure Boot keys in here.

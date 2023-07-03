@@ -1,0 +1,53 @@
+#cloud-config
+manage_etc_hosts: false
+manage_resolv_conf: false
+
+runcmd: 
+{%- if is_router %}
+  - /usr/bin/echo "net.ipv4.ip_forward = 1" >>  /etc/sysctl.d/ip-forwarding.conf
+  - /usr/sbin/sysctl --system
+{%- endif %}
+{%- for cmd in run_cmds %}
+  - {{ cmd }}
+{%- endfor %}
+  - sh -c "if [ -f /etc/cloud/runcmd.sh ]; then /etc/cloud/runcmd.sh; fi"
+
+groups: {%- if groups | length == 0 %} [] {%- endif %} 
+{%- for group in groups %}
+  - {{ group }}
+{%- endfor %}
+
+users: {% if users|length == 0 %} [] {% endif %}
+{%- for name,user in users.items() %}
+  - name: "{{ name }}"
+    gecos: "{{ user.get('gecos') }}"
+    uid: {{ user.get('uid') }}
+    primary_group: "{{ user.get('primary_group') }}"
+    {%- if user.get('sudo') %}
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    {%- endif %}
+    groups: {%- if user.get('groups') | length == 0 %} [] {%- endif %} 
+    {%- for group in user.get('groups') %}
+      - {{ group }}
+    {%- endfor %}
+    {% if 'shell' in user -%} shell: "{{ user.get('shell') }}"
+    {% else -%} shell: "/bin/bash" {% endif -%}
+    ssh_authorized_keys: {%- if user.get('ssh_keys') | length == 0 %} [] {%- endif %}
+    {%- for key in user.get('ssh_keys') %}
+      - {{ key }}
+    {%- endfor %}
+    lock_passwd: {{ user.get('lock_passwd') }}
+    {%- if 'passwd' in user %}
+    passwd: {{ user.get('passwd') }}
+    {%- endif %}
+{%- endfor %}
+
+disable_root: true
+
+ssh_pwauth: false
+
+chpasswd:
+  expire: false
+  list:
+    - root:{{ root_pw }}
+

@@ -1,0 +1,9 @@
+boot/conf/grub.cfg
+boot/conf/gpg.cfg
+boot/sbkeys/db.key
+boot/sbkeys/db.crt
+boot/output/*
+!boot/output/README.md
+.DS_Store
+__pycache__
+hostconf/hostconf.yaml

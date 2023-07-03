@@ -1,0 +1,8 @@
+services:
+  buildenv:
+    build: buildenv
+    volumes:
+        - ./output:/root/output:rw
+        - ./scripts:/root/scripts:ro
+        - ./sbkeys:/root/sbkeys:ro
+        - ./conf:/root/conf:ro

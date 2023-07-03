@@ -1,0 +1,1 @@
+The files generated in this directory should be placed in the root directory of a tftp server configured as next-server by dhcp. Often, this directory will be /srv/tftp.

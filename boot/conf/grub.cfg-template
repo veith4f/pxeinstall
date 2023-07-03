@@ -1,0 +1,11 @@
+menuentry "PXEinstall - Automated OS Installer" {
+  echo "Now loading kernel and ramdisk"
+  echo "Boot server: ${net_default_server}"
+  echo "Local interface: ${net_default_mac}"
+  echo
+  echo "Please be patient ..."
+  echo
+
+  linux vmlinuz hostconf="http://${net_default_server}:5000" client="${net_default_mac}"
+  initrd "initrd.img"
+}

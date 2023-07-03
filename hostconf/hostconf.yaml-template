@@ -1,0 +1,69 @@
+__defs__:
+  config_ua: &config_ua
+    config: "unattend"
+
+  config_ci: &config_ci
+    config: "cloudinit"
+
+  ns_default: &ns_default
+    nameserver: 192.168.234.254
+
+  ansible_url: &ansible_url
+    ansible_notify: ansible.servers.ils.bayern.de
+
+  debian_sda: &debian_sda
+    <<: *config_ci
+    <<: *ns_default
+    is_router: no
+    run_cmds: []
+    install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
+    install_to: /dev/sda
+    root_pw: root
+
+  windows_sda: &windows_sda
+    <<: *config_ua
+    <<: *ns_default
+    is_router: no
+    run_cmds: []
+    install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
+    install_to: /dev/sda
+
+  default_routes: &default_routes
+    routes:
+      - to: "0.0.0.0/0"
+        via: "192.168.234.254"
+
+  default_users: &default_users
+    users:
+      ansible:
+        gecos: 'Ansible System User'
+        ssh_keys:
+          - "ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAA7xnnaVuVsj0rMvCMiux6xKTpIKBcxIAt7r9FOBpKa1mPJNiqVowTnp9TfUzsn5yTDpnsEZ++7tfoXvX5pAgJSbADfCQpJE64QixU9ESwhE28FWQOF90OpQqibCVj6JF9Qm1uy7CvkygKthI0NUG5vs7Tb7lty6Y7OEOwH88yslHRMeg== IGNIS-Plus OVH Ansible"
+        sudo: yes
+        uid: 1001
+        shell: /bin/bash
+        primary_group: ansible
+        lock_passwd: yes
+        groups:
+          - wheel
+          - adm
+
+  default_groups: &default_groups
+    groups:
+      - ansible
+
+hosts:
+  test1.client.ils13.bayern.de:
+    <<: *debian_sda
+    interfaces:
+      eth0:
+        mac: "ee:4a:6a:a1:04:47"
+        addresses: ['192.168.234.244/24']
+        <<: *default_routes
+    <<: *ansible_url
+    playbooks:
+      - core-config.xml
+      - media.xml
+    <<: *default_users
+    <<: *default_groups
+
