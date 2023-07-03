@@ -45,8 +45,9 @@ with open('hostconf.yaml', 'r') as f:
 
     @app.route("/config/<client>")
     def type(client):
-        host = get_host_config(client)
-        return host.get('config')
+        host = get_host_config(client)        
+        return return_if_found(host,
+                               lambda host: host.get('config'))
 
     @app.route("/network-config/<client>")
     def network_config(client):
@@ -77,4 +78,3 @@ with open('hostconf.yaml', 'r') as f:
         return return_if_found(host,
                                lambda host: template.render({
                                }))
-        return template.render()
