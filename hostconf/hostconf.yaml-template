@@ -25,7 +25,7 @@ __defs__:
     <<: *ns_default
     is_router: no
     run_cmds: []
-    install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-8.8-20230524.x86_64.raw"
+    install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-UEFI-8.8-20230524.x86_64.raw"
     install_to: /dev/sda
     root_pw: root
 
