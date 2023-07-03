@@ -138,9 +138,10 @@ log_end_msg
 continue_or_shell
 
 log_begin_msg "Query hostconf service for installation parameters"
-install=$(curl -k $hostconf/install/$client)
-install_to=$(curl -k $hostconf/install_to/$client)
-config=$(curl -k $hostconf/config/$client)
+osconfig=$(curl -k $hostconf/osconfig/$client)
+install=$(echo "$osconfig" | sed '1q;d')
+install_to=$(echo "$osconfig" | sed '2q;d')
+config=$(echo "$osconfig" | sed '3q;d')
 log_end_msg
 
 continue_or_shell
@@ -202,7 +203,7 @@ if [[ "$config" == "cloudinit" ]]; then
 
     continue_or_shell
 
-    log_begin_msg "Downloading cloud-init configurations files to config-drive"
+    log_begin_msg "Downloading cloud-init configuration files to config-drive"
         echo "instance-id: $(uuidgen | sed 's/-//g')" > /mnt/config/meta-data
         curl -k $hostconf/network-config/$client > /mnt/config/network-config
         curl -k $hostconf/user-data/$client > /mnt/config/user-data

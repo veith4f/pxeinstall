@@ -31,23 +31,16 @@ with open('hostconf.yaml', 'r') as f:
         else:
             return "Not found", 404
 
-    @app.route("/install/<client>")
+    @app.route("/osconfig/<client>")
     def install(client):
         host = get_host_config(client)
+        template = env.get_template("osconfig")
         return return_if_found(host,
-                               lambda host: host.get('install'))
-
-    @app.route("/install_to/<client>")
-    def install_to(client):
-        host = get_host_config(client)
-        return return_if_found(host,
-                               lambda host: host.get('install_to'))
-
-    @app.route("/config/<client>")
-    def type(client):
-        host = get_host_config(client)        
-        return return_if_found(host,
-                               lambda host: host.get('config'))
+                               lambda host: template.render({
+                                   'install': host.get('install'),
+                                   'install_to': host.get('install_to'),
+                                   'config': host.get('config')
+                               }))
 
     @app.route("/network-config/<client>")
     def network_config(client):
