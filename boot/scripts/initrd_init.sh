@@ -173,7 +173,7 @@ continue_or_shell
 
 log_begin_msg "Fix GPT header and probe for partitions"
 sleep 1
-#echo -e "fix\n" | parted ---pretend-input-tty $install_to "print"
+echo -e "fix\n" | parted ---pretend-input-tty $install_to "print"
 partprobe $install_to
 vgchange -ay
 VGNAME=$(vgs --no-headings | cut -d' ' -f 3)
@@ -198,8 +198,8 @@ if [[ "$config" == "cloudinit" ]]; then
         partprobe $install_to
         PARTNUM=$(cat /proc/partitions | tail -n 1 | tr -d '[:space:]' | tail -c 1)
         yes | mkfs.vfat -n "CIDATA" "${install_to}$PARTNUM"
-        mount -t vfat "${install_to}$PARTNUM" /mnt/config
         growpart $install_to $(expr $PARTNUM - 1)
+        mount -t vfat "${install_to}$PARTNUM" /mnt/config
     fi
     log_end_msg
 
