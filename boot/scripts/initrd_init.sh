@@ -119,7 +119,7 @@ log_begin_msg "Loading essential drivers"
 [ -n "${netconsole}" ] && /sbin/modprobe netconsole netconsole="${netconsole}"
 load_modules
 modprobe af_packet
-kos="fat vfat nls_cp437 nls_cp850 nls_ascii"
+kos="fat vfat nls_cp437 nls_cp850 nls_ascii efivarfs"
 for ko in $kos; do
     insmod $(find /usr/lib/modules -name $ko.ko)
 done

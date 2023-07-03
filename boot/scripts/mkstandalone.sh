@@ -102,13 +102,16 @@ cp /usr/lib/x86_64-linux-gnu/libresolv.so.2 initrd/usr/lib/x86_64-linux-gnu/
 cp /usr/lib/x86_64-linux-gnu/libffi.so.8 initrd/usr/lib/x86_64-linux-gnu/
 # copy needed fs modules
 mkdir -p initrd/usr/lib/modules/$uname/kernel/fs/nls
-cp -a /usr/lib/modules/$uname/kernel/fs/fat initrd/usr/lib/modules/$uname/kernel/fs
-cp -a /usr/lib/modules/$uname/kernel/fs/nls/nls_cp437.ko initrd/usr/lib/modules/$uname/kernel/fs/nls
-cp -a /usr/lib/modules/$uname/kernel/fs/nls/nls_cp850.ko initrd/usr/lib/modules/$uname/kernel/fs/nls
-cp -a /usr/lib/modules/$uname/kernel/fs/nls/nls_ascii.ko initrd/usr/lib/modules/$uname/kernel/fs/nls
+cp /usr/lib/modules/$uname/kernel/fs/fat initrd/usr/lib/modules/$uname/kernel/fs
+cp /usr/lib/modules/$uname/kernel/fs/nls/nls_cp437.ko initrd/usr/lib/modules/$uname/kernel/fs/nls
+cp /usr/lib/modules/$uname/kernel/fs/nls/nls_cp850.ko initrd/usr/lib/modules/$uname/kernel/fs/nls
+cp /usr/lib/modules/$uname/kernel/fs/nls/nls_ascii.ko initrd/usr/lib/modules/$uname/kernel/fs/nls
+# copy efidisk module
+mkdir -p initrd/usr/lib/modules/$uname/kernel/fs/efivarfs
+cp /usr/lib/modules/$uname/kernel/fs/efivarfs/efivarfs.ko initrd/usr/lib/modules/$uname/kernel/fs/efivarfs
 # copy hd drivers
-cp -a /usr/lib/modules/$uname/kernel/drivers/ata initrd/usr/lib/modules/$uname/kernel/drivers
-cp -a /usr/lib/modules/$uname/kernel/drivers/scsi initrd/usr/lib/modules/$uname/kernel/drivers
+cp /usr/lib/modules/$uname/kernel/drivers/ata initrd/usr/lib/modules/$uname/kernel/drivers
+cp /usr/lib/modules/$uname/kernel/drivers/scsi initrd/usr/lib/modules/$uname/kernel/drivers
 # fix log_begin_msg function
 sed -i 's/"Begin: %s ... "/"Begin: %s ... \\\\n"/g' initrd/scripts/functions
 # create mount dirs in ramdisk
