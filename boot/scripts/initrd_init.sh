@@ -170,7 +170,7 @@ continue_or_shell
 
 log_begin_msg "Fix GPT header and probe for partitions"
 sleep 1
-echo -e "fix\n" | parted ---pretend-input-tty $install_to "print"
+echo -e "fix\n" | parted $install_to "print"
 partprobe $install_to
 vgchange -ay
 VGNAME=$(vgs --no-headings | cut -d' ' -f 3)
