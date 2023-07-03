@@ -188,7 +188,7 @@ if [[ "$config" == "cloudinit" ]]; then
           growpart /dev/$(echo $PVDEV | rev | cut -c2- | rev) $(echo $PVDEV | rev | cut -c1)
         fi
         lvcreate -L 4M -n cidata $VGNAME
-        yes | mkfs.vfat -n "CIDATA" /dev/$VGNAME/config
+        yes | mkfs.vfat -n "CIDATA" /dev/$VGNAME/cidata
         mount -t vfat /dev/$VGNAME/cidata /mnt/config
     else # handle image without lvm
         echo -e "ignore\n" | parted $install_to -- mkpart CIDATA fat32 -4MB -0
