@@ -146,12 +146,9 @@ log_end_msg
 continue_or_shell
 
 log_begin_msg "Preparing local disk"
-dd if=/dev/zero of=$install_to bs=1M count=10
 vgchange -an
-cat <<EOF | fdisk $install_to
-o
-w
-EOF
+dd if=/dev/zero of=$install_to bs=1M count=10
+echo -e "yes\n" | parted $install_to mklabel gpt
 log_end_msg
 
 continue_or_shell
