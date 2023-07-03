@@ -5,7 +5,7 @@ ethernets:
     match:
       macaddress: "{{ iface.mac }}"
     set-name: {{ name }}
-    routes: {% if iface.routes | length == 0 %} [] {% endif %}     
+    routes: {% if iface.routes | length == 0 %} [] {% endif %}
       {%- for route in iface.routes %}
       - to: {{ route.to }}
         via: {{ route.via }}
