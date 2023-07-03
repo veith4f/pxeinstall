@@ -230,7 +230,20 @@ log_end_msg
 continue_or_shell
 
 log_begin_msg "Arrange EFI boot order to boot disk on next boot"
-efibootmgr --bootnext 0003
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+mount ${install_to}1 /mnt
+if [[ "$config" == "cloudinit" ]]; then # linux case
+    if [ -z "$(efibootmgr | grep Linux)" ]; then
+        SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g')
+        efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
+    fi
+    NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
+    efibootmgr --bootnext $NEXT
+else # windows case
+    echo "Windows case not handled yet"
+fi
+umount /mnt
+umount /sys/firmware/efi/efivars
 log_end_msg
 
 continue_or_shell
