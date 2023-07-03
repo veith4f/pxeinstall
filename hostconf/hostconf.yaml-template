@@ -20,6 +20,15 @@ __defs__:
     install_to: /dev/sda
     root_pw: root
 
+  alma_generic_sda: &alma_generic_sda
+    <<: *config_ci
+    <<: *ns_default
+    is_router: no
+    run_cmds: []
+    install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-8.8-20230524.x86_64.raw"
+    install_to: /dev/sda
+    root_pw: root
+
   windows_sda: &windows_sda
     <<: *config_ua
     <<: *ns_default
@@ -67,3 +76,16 @@ hosts:
     <<: *default_users
     <<: *default_groups
 
+  test2.client.ils13.bayern.de:
+    <<: *alma_generic_sda
+    interfaces:
+      eth0:
+        mac: "ee:4a:6a:a1:04:49"
+        addresses: ['192.168.234.249/24']
+        <<: *default_routes
+    <<: *ansible_url
+    playbooks:
+      - core-config.xml
+      - media.xml
+    <<: *default_users
+    <<: *default_groups
