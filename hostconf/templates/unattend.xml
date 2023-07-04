@@ -164,11 +164,13 @@
                     <Order>4</Order>
                     <Path>cmd.exe /c sc config winrm start= auto</Path>
                 </RunSynchronousCommand>
+                {% for cmd in run_cmds %}
                 <RunSynchronousCommand wcm:action="add">
-                    <Description>Run Playbook</Description>
-                    <Order>5</Order>
-                    <Path>powershell.exe -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://192.168.0.84:5000/deploy' -Method POST -Body (@{'playbook'='my_playbook.yml'} | ConvertTo-Json) -ContentType 'application/json'"</Path>
+                    <Description>{{ cmd }}</Description>
+                    <Order>{{ loop.index + 4 }}</Order>
+                    <Path>{{ cmd }}</Path>
                 </RunSynchronousCommand>
+                {% endfor %}
             </RunSynchronous>
         </component>
         <component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
