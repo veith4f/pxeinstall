@@ -164,13 +164,13 @@
                     <Order>4</Order>
                     <Path>cmd.exe /c sc config winrm start= auto</Path>
                 </RunSynchronousCommand>
-                {% for cmd in run_cmds %}
+                {%- for cmd in run_cmds %}
                 <RunSynchronousCommand wcm:action="add">
                     <Description>{{ cmd }}</Description>
                     <Order>{{ loop.index + 4 }}</Order>
                     <Path>{{ cmd }}</Path>
                 </RunSynchronousCommand>
-                {% endfor %}
+                {%- endfor %}
             </RunSynchronous>
         </component>
         <component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -184,12 +184,12 @@
             {%- for name,iface in interfaces.items() %}
                 <Interface wcm:action="add">
                     <Ipv4Settings>
-                        <DhcpEnabled>{%- if 'dhcp4' in iface -%}{{ iface.get('dhcp4') }}{%- endif -%}</DhcpEnabled>
-                        <RouterDiscoveryEnabled>{%- if 'dhcp4' in iface -%}{{ iface.get('dhcp4') }}{%- endif -%}</RouterDiscoveryEnabled>
+                        <DhcpEnabled>{{ iface.get('dhcp4', false) }}</DhcpEnabled>
+                        <RouterDiscoveryEnabled>{{ iface.get('dhcp4', false) }}</RouterDiscoveryEnabled>
                     </Ipv4Settings>
                     <Ipv6Settings>
-                        <DhcpEnabled>{%- if 'dhcp6' in iface -%}{{ iface.get('dhcp6') }}{%- endif -%}</DhcpEnabled>
-                        <RouterDiscoveryEnabled>{%- if 'dhcp6' in iface -%}{{ iface.get('dhcp6') }}{%- endif -%}</RouterDiscoveryEnabled>
+                        <DhcpEnabled>{{ iface.get('dhcp6', false) }}</DhcpEnabled>
+                        <RouterDiscoveryEnabled>{{ iface.get('dhcp6', false) }}</RouterDiscoveryEnabled>
                     </Ipv6Settings>
                     <Identifier>{{ name }}</Identifier>
                     {%- if 'addresses' in iface and iface.get('addresses') | length > 0 %}
