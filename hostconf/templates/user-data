@@ -58,7 +58,7 @@ disable_root: true
 
 ssh_pwauth: false
 
-{% if root_pw is not None %}
+{% if root_pw is not none %}
 chpasswd:
   expire: false
   list:
