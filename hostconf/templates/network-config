@@ -1,21 +1,28 @@
 version: 2
+{% if interfaces | length > 0%}
 ethernets:
   {%- for name,iface in interfaces.items() %}
   eth{{ loop.index-1 }}:
     match:
-      macaddress: "{{ iface.mac }}"
+      macaddress: "{{ iface.get('mac') }}"
     set-name: {{ name }}
-    routes: {% if iface.routes | length == 0 %} [] {% endif %}
-      {%- for route in iface.routes %}
-      - to: {{ route.to }}
-        via: {{ route.via }}
-	{%- if 'metric' in route %}
-	metric: {{ route.metric }}
-	{%- endif -%}
+    dhcp4: {% if 'dhcp4' in iface %} {{ iface.get('dhcp4') }} {% else %} false {% endif %}
+    dhcp6: {% if 'dhcp6' in iface %} {{ iface.get('dhcp6') }} {% else %} false {% endif %}
+    {% if 'routes' in iface and iface.get('routes') | length > 0 %}
+    routes:
+      {%- for route in iface.get('routes') %}
+      - to: {{ route.get('to') }}
+        via: {{ route.get('via') }}
+        {%- if 'metric' in route %}
+        metric: {{ route.get('metric') }}
+        {%- endif -%}
       {%- endfor %}
-    addresses: {% if iface.addresses | length == 0 %} [] {% endif %}
-      {%- for address in iface.addresses %}
+    {%- endif %}
+    {% if 'addresses' in iface and iface.get('addresses') | length > 0 %}
+    addresses:
+      {%- for address in iface.get('addresses') %}
       - {{ address }}
       {%- endfor %}
+    {% endif %}
   {%- endfor %}
-
+{% endif %}

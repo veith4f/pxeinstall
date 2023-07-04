@@ -204,7 +204,7 @@ if [[ "$config" == "cloudinit" ]]; then
     continue_or_shell
 
     log_begin_msg "Downloading cloud-init configuration files to config-drive"
-        echo "instance-id: $(uuidgen | sed 's/-//g')" > /mnt/config/meta-data
+        curl -k $hostconf/meta-data/$client > /mnt/config/meta-data
         curl -k $hostconf/network-config/$client > /mnt/config/network-config
         curl -k $hostconf/user-data/$client > /mnt/config/user-data
         umount /mnt/config
