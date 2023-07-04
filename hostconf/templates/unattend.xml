@@ -185,7 +185,7 @@
                         <Metric>10</Metric>
                         <RouterDiscoveryEnabled>{{ iface.get('dhcp6', false) }}</RouterDiscoveryEnabled>
                     </Ipv6Settings>
-                    <Identifier>{{ name }}</Identifier>
+                    <Identifier>Ethernet {{ loop.index }}</Identifier>
                     {%- if 'addresses' in iface and iface.get('addresses') | length > 0 %}
                     <UnicastIpAddresses>
                     {%- for address in iface.get('addresses') %}
