@@ -121,7 +121,7 @@
                         </Password>
                         {% endif %}
                         <DisplayName>{{ user.get('gecos') }}</DisplayName>
-                        <Group>{{ ";".join(user.get('groups', default=[]) + [ user.get('primary_group') ]) }}</Group>
+                        <Group>{{ ";".join(user.get('groups', []) + [ user.get('primary_group') ]) }}</Group>
                         <Name>{{ name }}</Name>
                   </LocalAccount>
                 {% endfor %}

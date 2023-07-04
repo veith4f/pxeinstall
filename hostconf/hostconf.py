@@ -49,7 +49,7 @@ with open('hostconf.yaml', 'r') as f:
         template = env.get_template("network-config")
         return return_if_found(host,
                                lambda host: template.render({
-                                   'interfaces':  host.get('interfaces', default=[])
+                                   'interfaces':  host.get('interfaces', [])
                                }))
 
     @app.route("/user-data/<client>")
@@ -59,11 +59,11 @@ with open('hostconf.yaml', 'r') as f:
         return return_if_found(host,
                                lambda host: template.render({
                                    'hostname': hostname,
-                                   'users': host.get('users', default=[]),
-                                   'groups': host.get('groups', default=[]),
-                                   'root_pw': host.get('root_pw', default=None),
-                                   'run_cmds': host.get('run_cmds', default=[]),
-                                   'is_router': host.get('is_router', default=False)
+                                   'users': host.get('users', []),
+                                   'groups': host.get('groups', []),
+                                   'root_pw': host.get('root_pw', None),
+                                   'run_cmds': host.get('run_cmds', []),
+                                   'is_router': host.get('is_router', False)
                                }))
 
     @app.route("/meta-data/<client>")
@@ -83,5 +83,5 @@ with open('hostconf.yaml', 'r') as f:
         return return_if_found(host,
                                lambda host: template.render({
                                    'hostname': hostname,
-                                   'interfaces': host.get('interfaces', default=[])
+                                   'interfaces': host.get('interfaces', [])
                                }))
