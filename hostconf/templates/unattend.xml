@@ -109,17 +109,10 @@
                 <LocalAccounts>
                 {%- for name, user in users.items() %}
                     <LocalAccount wcm:action="add">
-                        {%- if 'plain_text_passwd' in user%}
                         <Password>
-                            <Value>{{ user.get('plain_text_passwd')}}</Value>
+                            <Value>{{ user.get('plain_text_passwd', name)}}</Value>
                             <PlainText>true</PlainText>
                         </Password>
-                        {%- elif 'passwd' in user %}
-                        <Password>
-                            <Value>{{ user.get('passwd')}}</Value>
-                            <PlainText>false</PlainText>
-                        </Password>
-                        {%- endif %}
                         <DisplayName>{{ user.get('gecos') }}</DisplayName>
                         <Group>{{ ";".join(user.get('groups', []) + [ user.get('primary_group') ]) }}</Group>
                         <Name>{{ name }}</Name>
@@ -128,7 +121,6 @@
                 </LocalAccounts>
                 {%- endif %}
             </UserAccounts>
-
         </component>
 
         <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

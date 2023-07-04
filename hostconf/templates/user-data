@@ -51,8 +51,8 @@ users:
     {%- if 'lock_passwd' in user %}
     lock_passwd: {{ user.get('lock_passwd') }}
     {%- endif %}
-    {%- if 'passwd' in user %}
-    passwd: {{ user.get('passwd') }}
+    {%- if 'plain_text_passwd' in user %}
+    plain_text_passwd: {{ user.get('plain_text_passwd') }}
     {%- endif %}
 {%- endfor %}
 {%- endif %}
