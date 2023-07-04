@@ -177,10 +177,12 @@
                 <Interface wcm:action="add">
                     <Ipv4Settings>
                         <DhcpEnabled>{{ iface.get('dhcp4', false) }}</DhcpEnabled>
+                        <Metric>10</Metric>
                         <RouterDiscoveryEnabled>{{ iface.get('dhcp4', false) }}</RouterDiscoveryEnabled>
                     </Ipv4Settings>
                     <Ipv6Settings>
                         <DhcpEnabled>{{ iface.get('dhcp6', false) }}</DhcpEnabled>
+                        <Metric>10</Metric>
                         <RouterDiscoveryEnabled>{{ iface.get('dhcp6', false) }}</RouterDiscoveryEnabled>
                     </Ipv6Settings>
                     <Identifier>{{ name }}</Identifier>
@@ -196,9 +198,7 @@
                     {%- for route in iface.get('routes') %}
                         <Route wcm:action="add">
                             <Identifier>1</Identifier>
-                            {%- if 'metric' in route %}
-                                <Metric>{{ route.get('metric') }}</Metric>
-                            {%- endif %}
+                            <Metric>{{ route.get('metric', 10) }}</Metric>
                             <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
                             <Prefix>{{ route.get('to').split('/')[1] }}</Prefix>
                         </Route>
