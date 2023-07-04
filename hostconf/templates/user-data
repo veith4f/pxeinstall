@@ -32,7 +32,7 @@ users:
     sudo: "ALL=(ALL) NOPASSWD:ALL"
     {%- endif %}
     {%- if 'groups' in user and user.get('groups') | length > 0 %}
-    groups: [] {%- endif %}
+    groups:
     {%- for group in user.get('groups') %}
       - {{ group }}
     {%- endfor %}
