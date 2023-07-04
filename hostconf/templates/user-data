@@ -17,16 +17,16 @@ groups: {%- if groups | length == 0 %} [] {%- endif %}
   - {{ group }}
 {%- endfor %}
 
-{% if users.items() | length > 0 %}
+{%- if users.items() | length > 0 %}
 users:
 {%- for name,user in users.items() %}
   - name: "{{ name }}"
-    {% if 'gecos' in user %}
+    {%- if 'gecos' in user %}
     gecos: "{{ user.get('gecos') }}"
-    {% endif %}
-    {% if 'uid' in user %}
+    {%- endif %}
+    {%- if 'uid' in user %}
     uid: {{ user.get('uid') }}
-    {% endif %}
+    {%- endif %}
     primary_group: "{{ user.get('primary_group') }}"
     {%- if 'sudo' in user and user.get('sudo') %}
     sudo: "ALL=(ALL) NOPASSWD:ALL"
@@ -36,23 +36,23 @@ users:
     {%- for group in user.get('groups') %}
       - {{ group }}
     {%- endfor %}
-    {% endif %}
-    {% if 'shell' in user -%} shell: {{ user.get('shell') }}
+    {%- endif %}
+    {%- if 'shell' in user -%} shell: {{ user.get('shell') }}
     {% else -%} shell: /bin/bash {% endif -%}
-    {% if 'ssh_keys' in user and user.get('ssh_keys') | length > 0 %}
+    {%- if 'ssh_keys' in user and user.get('ssh_keys') | length > 0 %}
     ssh_authorized_keys:
     {%- for key in user.get('ssh_keys') %}
       - {{ key }}
     {%- endfor %}
     {%- endif %}
-    {% if 'lock_passwd' in user %}
+    {%- if 'lock_passwd' in user %}
     lock_passwd: {{ user.get('lock_passwd') }}
-    {% endif %}
+    {%- endif %}
     {%- if 'passwd' in user %}
     passwd: {{ user.get('passwd') }}
     {%- endif %}
 {%- endfor %}
-{% endif %}
+{%- endif %}
 
 disable_root: true
 
