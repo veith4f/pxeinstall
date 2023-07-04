@@ -77,7 +77,7 @@ hosts:
     <<: *default_groups
 
   test2.client.ils13.bayern.de:
-    <<: *alma_generic_sda
+    <<: *windows_sda
     interfaces:
       eth0:
         mac: "ee:4a:6a:a1:04:49"
