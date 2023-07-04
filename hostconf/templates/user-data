@@ -37,8 +37,11 @@ users:
       - {{ group }}
     {%- endfor %}
     {%- endif %}
-    {%- if 'shell' in user -%} shell: {{ user.get('shell') }}
-    {% else -%} shell: /bin/bash {% endif -%}
+    {%- if 'shell' in user %}
+    shell: {{ user.get('shell') }}
+    {%- else %}
+    shell: /bin/bash
+    {%- endif %}
     {%- if 'ssh_keys' in user and user.get('ssh_keys') | length > 0 %}
     ssh_authorized_keys:
     {%- for key in user.get('ssh_keys') %}
@@ -58,10 +61,10 @@ disable_root: true
 
 ssh_pwauth: false
 
-{% if root_pw is not none %}
+{%- if root_pw is not none %}
 chpasswd:
   expire: false
   list:
     - root:{{ root_pw }}
-{% endif %}
+{%- endif %}
 

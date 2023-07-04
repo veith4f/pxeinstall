@@ -79,9 +79,14 @@ with open('hostconf.yaml', 'r') as f:
     @app.route("/unattend/<client>")
     def unattend(client):
         hostname, host = get_host_config(client)
-        template = env.get_template("Unattend.xml")
+        template = env.get_template("unattend.xml")
         return return_if_found(host,
                                lambda host: template.render({
                                    'hostname': hostname,
+                                   'users': host.get('users', []),
+                                   'groups': host.get('groups', []),
+                                   'root_pw': host.get('root_pw', None),
+                                   'run_cmds': host.get('run_cmds', []),
+                                   'is_router': host.get('is_router', False),
                                    'interfaces': host.get('interfaces', [])
                                }))
