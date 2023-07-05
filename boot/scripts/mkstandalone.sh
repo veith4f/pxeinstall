@@ -140,9 +140,6 @@ set timeout=3
 export default
 export timeout
 
-prefix=(tftp,\${net_default_server})
-export prefix
-
 configfile "grub.cfg"
 
 echo Could not find boot configuration.
@@ -151,12 +148,14 @@ sleep 10
 reboot
 EOF
 
-GPG_KEY=$(gpg --batch $PASSPHRASE --gen-key $CONF_GPG_CFG 2>&1 | rev | cut -d/ -f 1 | rev | cut -d. -f 1)
+GPG_OUTPUT=$(gpg --batch $PASSPHRASE --gen-key $CONF_GPG_CFG 2>&1)
+echo "GPG_OUTPUT: $GPG_OUTPUT"
+GPG_KEY=$(echo $GPG_OUTPUT | rev | cut -d/ -f 1 | rev | cut -d. -f 1)
+echo "GPG_KEY: $GPG_KEY"
 gpg --export "$GPG_KEY" > "$TMP_GPG_KEY"
 
 /usr/local/bin/grub-mkimage \
     --disable-shim-lock \
-    --prefix="" \
     --directory="/usr/local/lib/grub/x86_64-efi" \
     --format="x86_64-efi" \
     --pubkey="$TMP_GPG_KEY" \
