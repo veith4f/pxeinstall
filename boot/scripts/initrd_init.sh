@@ -153,6 +153,7 @@ echo -e "yes\n" | parted $install_to mklabel gpt
 log_end_msg
 
 continue_or_shell
+
 install_nfs=$(echo $install | sed 's|nfs://||g')
 fields=$(echo $install_nfs | tr -dc "/"| wc -c)
 mountpath=$(echo $install_nfs | cut -d/ -f1-$fields)
