@@ -35,7 +35,7 @@ with open('hostconf.yaml', 'r') as f:
     @app.route("/osconfig/<client>")
     def install(client):
         hostname, host = get_host_config(client)
-        template = env.get_template("osconfig")
+        template = env.get_template("osconfig.j2")
         return return_if_found(host,
                                lambda host: template.render({
                                    'install': host.get('install'),
@@ -46,7 +46,7 @@ with open('hostconf.yaml', 'r') as f:
     @app.route("/network-config/<client>")
     def network_config(client):
         hostname, host = get_host_config(client)
-        template = env.get_template("network-config")
+        template = env.get_template("network-config.j2")
         return return_if_found(host,
                                lambda host: template.render({
                                    'interfaces':  host.get('interfaces', [])
@@ -55,7 +55,7 @@ with open('hostconf.yaml', 'r') as f:
     @app.route("/user-data/<client>")
     def user_data(client):
         hostname, host = get_host_config(client)
-        template = env.get_template("user-data")
+        template = env.get_template("user-data.j2")
         return return_if_found(host,
                                lambda host: template.render({
                                    'hostname': hostname,
@@ -69,7 +69,7 @@ with open('hostconf.yaml', 'r') as f:
     @app.route("/meta-data/<client>")
     def meta_data(client):
         hostname, host = get_host_config(client)
-        template = env.get_template("meta-data")
+        template = env.get_template("meta-data.j2")
         return return_if_found(host,
                                lambda host: template.render({
                                    'instance_id': uuid.uuid4(),
@@ -79,7 +79,7 @@ with open('hostconf.yaml', 'r') as f:
     @app.route("/unattend/<client>")
     def unattend(client):
         hostname, host = get_host_config(client)
-        template = env.get_template("unattend.xml")
+        template = env.get_template("unattend.xml.j2")
         return return_if_found(host,
                                lambda host: template.render({
                                    'hostname': hostname,

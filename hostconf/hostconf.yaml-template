@@ -67,7 +67,8 @@ hosts:
     interfaces:
       eth0:
         mac: "ee:4a:6a:a1:04:47"
-        addresses: ['192.168.234.244/24']
+        addresses:
+          - 192.168.234.244/24
         <<: *default_routes
     <<: *ansible_url
     playbooks:
@@ -81,7 +82,8 @@ hosts:
     interfaces:
       eth0:
         mac: "ee:4a:6a:a1:04:49"
-        addresses: ['192.168.234.249/24']
+        addresses:
+          - 192.168.234.249/24
         <<: *default_routes
     <<: *ansible_url
     playbooks:
