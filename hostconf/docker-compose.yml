@@ -32,8 +32,3 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./cert:/cert"
       - "./conf:/conf"
-
-volumes:
-  traefik-public-certificates:
-
-
