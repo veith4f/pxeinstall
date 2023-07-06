@@ -47,8 +47,8 @@ API
 =======================
 Application will listen on port 443 and expose following endpoints which are contacted by booting ramdisk. Refer to hostconf.yaml in app folder for existing hosts and interfaces.
 
-- GET /osconfig/<mac-address>
-- GET /network-config/<mac-address>
-- GET /user-data/<mac-address>
-- GET /meta-data/<mac-address>
-- GET /unattend/<mac-address>
+- GET /osconfig/{mac-address}
+- GET /network-config/{mac-address}
+- GET /user-data/{mac-address}
+- GET /meta-data/{mac-address}
+- GET /unattend/{mac-address}
