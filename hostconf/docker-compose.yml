@@ -17,7 +17,7 @@ services:
     command:
       - "--log.level=INFO"
       - "--api.insecure=true"
-      - "--api.dashboard=true"
+      - "--api.dashboard=false"
       - "--providers.docker.watch=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.file.filename=/conf/traefik.yml"
@@ -33,9 +33,6 @@ services:
       - "./conf:/conf"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=PathPrefix(`/dashboard/`)"
-      - "traefik.http.routers.dashboard.tls=true"
-      - "traefik.http.middlewares.auth.basicauth.users=testuser:$$apr1$$jIKW.bdS$$eKXe4Lxjgy/rH65wP1iQe1"
 
 volumes:
   traefik-public-certificates:
