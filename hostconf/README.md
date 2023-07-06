@@ -17,6 +17,11 @@ make cert
 ```
 
 
+Configuration
+=======================
+traefik.yml in conf folder. See https://doc.traefik.io/traefik/reference/dynamic-configuration/file/.
+
+
 Data Source
 =======================
 hostconf.yaml in app directory. Copy and edit hostconf.yaml-template to get started.
