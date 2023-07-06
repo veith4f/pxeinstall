@@ -27,6 +27,17 @@ Data Source
 hostconf.yaml in app directory. Copy and edit hostconf.yaml-template to get started.
 
 
+API
+=======================
+Application will listen on port 443 and expose following endpoints which are contacted by booting ramdisk. Refer to hostconf.yaml in app folder for existing hosts and interfaces.
+
+- GET /osconfig/{mac-address}
+- GET /network-config/{mac-address}
+- GET /user-data/{mac-address}
+- GET /meta-data/{mac-address}
+- GET /unattend/{mac-address}
+
+
 Usage
 =======================
 ```
@@ -42,13 +53,3 @@ make
 ```
 Build and Run in sequence. Rebuild only happens upon change to any of the files in docker directory so this is usually just as fast as Run.
 
-
-API
-=======================
-Application will listen on port 443 and expose following endpoints which are contacted by booting ramdisk. Refer to hostconf.yaml in app folder for existing hosts and interfaces.
-
-- GET /osconfig/{mac-address}
-- GET /network-config/{mac-address}
-- GET /user-data/{mac-address}
-- GET /meta-data/{mac-address}
-- GET /unattend/{mac-address}
