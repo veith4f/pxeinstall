@@ -5,24 +5,35 @@ Web service that reads yaml file in order to provide parameters to hosts doing o
 
 Dependencies
 =======================
-See requirements.txt. Install with pip or with your os's package manager.
+- docker-compose https://docs.docker.com/compose/install/
+- internet connection
+
+
+Certificates
+=======================
+Put any pre-existing key (key.pem) and certificate (cert.pem) into cert folder or generate with the following command.
 ```
-pip3 install -r requirements.txt
+make cert
 ```
 
 
 Data Source
 =======================
-hostconf.yaml in base directory. Copy and edit hostconf.yaml-template to get started.
+hostconf.yaml in app directory. Copy and edit hostconf.yaml-template to get started.
 
 
 Usage
 =======================
-Run externally visible web application on port 5000.
 ```
-gunicorn -w 2 -b 0.0.0.0:5000 'hostconf:app'
+docker-compose build
+``` 
+Build.
 ```
-Run web application locally on port 5000. Choice option in reverse proxy setup.
+docker-compose up 
+``` 
+Run.
 ```
-gunicorn -w 2 -b localhost:5000 'hostconf:app'
+make
 ```
+Build and Run in sequence. Rebuild only happens upon change to any of the files in docker directory so this is usually just as fast as Run.
+

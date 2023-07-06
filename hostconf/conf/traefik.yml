@@ -1,0 +1,17 @@
+http:
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+tls:
+  certificates:
+    - certFile: /cert/cert.pem
+      keyfile: /cert/key.pem
+      stores:
+        - default
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /cert/cert.pem
+        keyfile: /cert/key.pem

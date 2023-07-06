@@ -1,0 +1,1 @@
+Put web server certificate (cert.pem) and key (cert.key) into this directory. You may enter 'make cert' to generate self-signed files. Beware though, as this may overwrite existing files.

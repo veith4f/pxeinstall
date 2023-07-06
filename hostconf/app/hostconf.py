@@ -12,7 +12,6 @@ if not os.path.exists('hostconf.yaml'):
 
 with open('hostconf.yaml', 'r') as f:
     app = Flask(__name__)
-    LOG = app.logger
     env = Environment(
         loader=PackageLoader(__name__),
         autoescape=select_autoescape()

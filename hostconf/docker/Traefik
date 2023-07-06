@@ -1,0 +1,23 @@
+FROM traefik:v2.10.3
+
+RUN mkdir /etc/traefik && \
+    cat <<EOF > /etc/traefik/traefik.yml
+api:
+  insecure: true
+  dashboard: true
+log:
+  level: info
+providers:
+  docker:
+    watch: true
+    exposedByDefault: false
+  file:
+    filename: /conf/traefik.yml
+    watch: true
+entryPoints:
+  web:
+    address: :80
+  websecure:
+    address: :443
+EOF
+

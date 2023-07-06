@@ -6,4 +6,5 @@ boot/output/*
 !boot/output/README.md
 .DS_Store
 __pycache__
-hostconf/hostconf.yaml
+hostconf/app/hostconf.yaml
+hostconf/cert/*.pem
