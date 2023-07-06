@@ -11,7 +11,7 @@ Dependencies
 
 Certificates
 =======================
-Put any pre-existing key (key.pem) and certificate (cert.pem) into cert folder or generate with the following command.
+Put any pre-existing key (key.pem) and certificate (cert.pem) into cert folder or generate with the following command. The generated certificate will have CN=hostconf.domain.tld and the IP address of first network device as subjectAltName.
 ```
 make cert
 ```
