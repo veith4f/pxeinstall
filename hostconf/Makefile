@@ -1,5 +1,4 @@
 .DEFAULT_GOAL := default
-.ONESHELL: cert
 LOCALIP="$(shell ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.*' | awk '{print $1}')"
 
 .PHONY: cert
