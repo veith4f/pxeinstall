@@ -70,10 +70,6 @@ hosts:
         addresses:
           - 192.168.234.244/24
         <<: *default_routes
-    <<: *ansible_url
-    playbooks:
-      - core-config.xml
-      - media.xml
     <<: *default_users
     <<: *default_groups
 
@@ -85,10 +81,6 @@ hosts:
         addresses:
           - 192.168.234.249/24
         <<: *default_routes
-    <<: *ansible_url
-    playbooks:
-      - core-config.xml
-      - media.xml
     <<: *default_users
     <<: *default_groups
 

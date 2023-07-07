@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request
+from schema import Schema, SchemaError, Regex
 import yaml
 import os
 import uuid
@@ -10,13 +10,29 @@ if not os.path.exists('hostconf.yaml'):
     raise RuntimeError(
         "hostconf.yaml not found. See README.md for instructions.")
 
+config_schema = Schema({
+    "hosts": [
+        Regex(r'^([a-z]+[0-9-_]\.?[a-z]+[0-9])+$'): {
+            is_router: bool,
+            run_cmds: list(str),
+            install: str,
+            install_to: str
+            root_pw: str
+        }
+    ]
+})
+
 with open('hostconf.yaml', 'r') as f:
+    config = yaml.load(f, Loader=SafeLoader)
+
+    if not schema.is_valid(conf):
+        raise RuntimeError("Invalid schema: hostconf.yaml")
+
     app = Flask(__name__)
     env = Environment(
         loader=PackageLoader(__name__),
         autoescape=select_autoescape()
     )
-    config = yaml.load(f, Loader=SafeLoader)
 
     def get_host_config(client):
         for hostname, host in config.get('hosts').items():
