@@ -19,7 +19,8 @@ make cert
 
 Configuration
 =======================
-traefik.yml in conf folder. See https://doc.traefik.io/traefik/reference/dynamic-configuration/file/.
+- traefik.yml in conf folder. See https://doc.traefik.io/traefik/reference/dynamic-configuration/file/.
+- logging.yml in conf folder. See https://docs.python.org/3/library/logging.config.html#logging-config-fileformat.
 
 
 Data Source
