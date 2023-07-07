@@ -146,7 +146,7 @@ log_end_msg
 
 continue_or_shell
 
-log_begin_msg "Current layout of disk $install_to"
+log_begin_msg "Current layout of local install disk $install_to"
 parted $install_to print
 log_end_msg
 
