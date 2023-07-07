@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Response
-from schema import Schema, Optional, SchemaError, Regex, Use
+from schema import Schema, Optional, SchemaError, Regex
 import yaml
 import os
 import uuid
