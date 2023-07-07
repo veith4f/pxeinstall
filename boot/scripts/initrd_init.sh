@@ -33,34 +33,6 @@ mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts || true
 # Export the dpkg architecture
 export DPKG_ARCH=
 . /conf/arch.conf
-
-# Set modprobe env
-export MODPROBE_OPTIONS="-qb"
-
-# Export relevant variables
-export ROOT=
-export ROOTDELAY=
-export ROOTFLAGS=
-export ROOTFSTYPE=
-export IP=
-export DEVICE=
-export BOOT=
-export BOOTIF=
-export UBIMTD=
-export break=
-export init=/sbin/init
-export readonly=y
-export rootmnt=/root
-export debug=
-export panic=
-export blacklist=
-export resume=
-export resume_offset=
-export noresume=
-export drop_caps=
-export fastboot=n
-export forcefsck=n
-export fsckfix=
 export quiet=
 
 
@@ -116,17 +88,17 @@ continue_or_shell()
 
 hostconf_get()
 {
-    curl "$insecure" $hostconf/$1/$client
+    while : ; do
+	curl "$insecure" $hostconf/$1/$client && break || \
+	    (read -p "Could not connect to hostconf. Press 'a' to try again or enter to reboot: " IN \
+		 && [ "a" != "$IN" ] && reboot -f)
+    done
 }
-
-maybe_break top
 
 # Don't do log messages here to avoid confusing graphical boots
 run_scripts /scripts/init-top
 . /scripts/local
 . /scripts/nfs
-
-maybe_break modules
 
 starttime="$(_uptime)"
 starttime=$((starttime + 1)) # round up
@@ -158,11 +130,14 @@ osconfig=$(hostconf_get osconfig)
 install=$(echo "$osconfig" | sed '1q;d')
 install_to=$(echo "$osconfig" | sed '2q;d')
 config=$(echo "$osconfig" | sed '3q;d')
+echo "Image:       $install"
+echo "Local Disk:  $install_to"
+echo "Config:      $config"
 log_end_msg
 
 continue_or_shell
 
-log_begin_msg "Current layout of local install disk $install_to"
+log_begin_msg "Print layout of local disk $install_to"
 parted $install_to print
 log_end_msg
 
