@@ -1,13 +1,16 @@
 version: 1
 disable_existing_loggers: False
 formatters:
-  timestamped:
-    format: '%(asctime)s - %(message)s'
+  custom:
+    (): uvicorn.logging.ColourizedFormatter
+    fmt: "%(asctime)s %(levelname)s: %(message)s"
+    style: "%"
+    use_colors: True
 handlers:
   console:
     class: logging.StreamHandler
     level: INFO
-    formatter: timestamped
+    formatter: custom
     stream: ext://sys.stdout
 root:
   level: INFO
