@@ -19,12 +19,12 @@ Definition of boot menu, kernel, ramdisk selection and cmdline with parameters.
 Parameter 'hostconf' indicates where accompanying web service is found.
 Example:
 ```
-hostconf="https://${net_default_server}"
+hostconf="https://${net_default_server}" // ip of tftp server
 ```
 Parameter 'client' provides ramdisk's init script with mac adress of network adapter doing PXE.
 Example:
 ```
-client="${net_default_mac}"
+client="${net_default_mac}" // mac address of network adapter doing pxe
 ```
 Parameter 'debug' will cause booting ramdisk to stop at set positions and allow dropping to shell or continue on keystrike. 
 Example:
