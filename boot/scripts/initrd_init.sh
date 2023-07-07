@@ -1,5 +1,8 @@
 #!/bin/sh
 
+##############################################################
+## Boilerplate
+
 # Default PATH differs between shells, and is not automatically exported
 # by klibc dash.  Make it consistent.
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
@@ -59,9 +62,6 @@ export fastboot=n
 export forcefsck=n
 export fsckfix=
 export quiet=
-export client=
-export hostconf=
-export debug=
 
 
 # Bring in the main config
@@ -81,15 +81,13 @@ fi
 
 
 ##############################################################
-## BEGIN FLASH CLOUD IMAGE ROUTINE
-##
+## Parameters & Definitions
 
-continue_or_shell()
-{
-    [ ! -z "$debug" ] \
-      && read -p "Press enter to continue or sh to enter shell: " IN \
-      && [ "sh" == "$IN" ] && sh
-}
+export client=""
+export hostconf=""
+export insecure=""
+export debug=""
+
 
 # Parse command line options
 for x in $(cat /proc/cmdline); do
@@ -100,11 +98,26 @@ for x in $(cat /proc/cmdline); do
         client=*)
             client=${x#client=}
             ;;
+        insecure)
+            insecure="-k"
+            ;;
         debug)
             debug="y"
             ;;
         esac
 done
+
+continue_or_shell()
+{
+    [ ! -z "$debug" ] \
+      && read -p "Press enter to continue or sh to enter shell: " IN \
+      && [ "sh" == "$IN" ] && sh
+}
+
+hostconf_get()
+{
+    curl "$insecure" $hostconf/$1/$client
+}
 
 maybe_break top
 
@@ -114,6 +127,13 @@ run_scripts /scripts/init-top
 . /scripts/nfs
 
 maybe_break modules
+
+starttime="$(_uptime)"
+starttime=$((starttime + 1)) # round up
+export starttime
+
+##############################################################
+## Begin install routine
 
 log_begin_msg "Loading essential drivers"
 [ -n "${netconsole}" ] && /sbin/modprobe netconsole netconsole="${netconsole}"
@@ -125,10 +145,6 @@ for ko in $kos; do
 done
 log_end_msg
 
-starttime="$(_uptime)"
-starttime=$((starttime + 1)) # round up
-export starttime
-
 continue_or_shell
 
 log_begin_msg "Configure networking"
@@ -138,7 +154,7 @@ log_end_msg
 continue_or_shell
 
 log_begin_msg "Query hostconf service for installation parameters"
-osconfig=$(curl -k $hostconf/osconfig/$client)
+osconfig=$(hostconf_get osconfig)
 install=$(echo "$osconfig" | sed '1q;d')
 install_to=$(echo "$osconfig" | sed '2q;d')
 config=$(echo "$osconfig" | sed '3q;d')
@@ -210,17 +226,17 @@ if [[ "$config" == "cloudinit" ]]; then
 
     continue_or_shell
 
-    log_begin_msg "Downloading cloud-init configuration files to config-drive"
-        curl -k $hostconf/meta-data/$client > /mnt/config/meta-data
-        curl -k $hostconf/network-config/$client > /mnt/config/network-config
-        curl -k $hostconf/user-data/$client > /mnt/config/user-data
+    log_begin_msg "Downloading Cloud-Init configuration files to config-drive."
+        hostconf_get meta-data > /mnt/config/meta-data
+        hostconf_get network-config > /mnt/config/network-config
+        hostconf_get user-data > /mnt/config/user-data
         umount /mnt/config
     log_end_msg
 
 elif [[ "$config" == "unattend" ]]; then
     log_begin_msg "Unattended installation: Writing unattend.xml to disk."
     mount "${install_to}4" /mnt/config
-    curl -k $hostconf/unattend/$client > /mnt/config/unattend.xml
+    hostconf_get unattend > /mnt/config/unattend.xml
     umount /mnt/config
     log_end_msg
 else
@@ -257,6 +273,4 @@ continue_or_shell
 
 reboot -f
 
-##
-## END FLASH CLOUD IMAGE ROUTINE
-##############################################################
+
