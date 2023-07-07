@@ -146,6 +146,12 @@ log_end_msg
 
 continue_or_shell
 
+log_begin_msg "Current layout of disk $install_to"
+parted $install_to print
+log_end_msg
+
+continue_or_shell
+
 log_begin_msg "Preparing local disk"
 vgchange -an
 dd if=/dev/zero of=$install_to bs=1M count=10
@@ -215,12 +221,10 @@ elif [[ "$config" == "unattend" ]]; then
     log_begin_msg "Unattended installation: Writing unattend.xml to disk."
     mount "${install_to}4" /mnt/config
     curl -k $hostconf/unattend/$client > /mnt/config/unattend.xml
-    umount /mnt
+    umount /mnt/config
     log_end_msg
 else
-    echo "Configuration '$config' is not supported. Rebooting in 10 seconds ..."
-    sleep 10
-    reboot -f
+    echo "Configuration '$config' is not supported."
 fi
 
 continue_or_shell
