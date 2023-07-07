@@ -26,7 +26,7 @@ Example:
 ```
 client="${net_default_mac}"
 ```
-Parameter 'debug' can be added to kernel cmdline, which will cause booting ramdisk to stop at set positions and allow dropping to shell or continue on keystrike. 
+Parameter 'debug' will cause booting ramdisk to stop at set positions and allow dropping to shell or continue on keystrike. 
 Example:
 ```
 debug
