@@ -96,9 +96,9 @@ continue_or_shell()
 hostconf_get()
 {
   while : ; do
-  curl "$insecure" $hostconf/$1/$client && break || \
-    (read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
-     && [ "r" == "$IN" ] && reboot -f)
+  curl "$insecure" $hostconf/$1/$client && break || [ "$debug" == "y" ] \
+     && read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
+     && [ "r" == "$IN" ] && reboot -f
   done
 }
 
@@ -110,6 +110,7 @@ begin()
 
 end()
 {
+  [ "$debug" == "y" ] && sleep 1
   log_end_msg
 }
 
@@ -140,7 +141,7 @@ fields=$(echo $install_nfs | tr -dc "/"| wc -c)
 mountpath=$(echo $install_nfs | cut -d/ -f1-$fields)
 image=$(echo $install_nfs | cut -d/ -f$(($fields + 1)))
 echo "Image:       $image"
-echo " - on NFS:   $mountpath"
+echo " - on NFS:   nfs://$mountpath"
 echo "Local Disk:  $install_to"
 echo "Config:      $config"
 end
