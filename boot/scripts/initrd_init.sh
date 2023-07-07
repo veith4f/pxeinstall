@@ -39,7 +39,7 @@ export quiet=
 # Bring in the main config
 . /conf/initramfs.conf
 for conf in conf/conf.d/*; do
-    [ -f "${conf}" ] && . "${conf}"
+  [ -f "${conf}" ] && . "${conf}"
 done
 . /scripts/functions
 
@@ -47,53 +47,9 @@ mount -t tmpfs -o "nodev,noexec,nosuid,size=${RUNSIZE:-10%},mode=0755" tmpfs /ru
 mkdir -m 0700 /run/initramfs
 
 if [ -n "$log_output" ]; then
-    exec >$log_output 2>&1
-    unset log_output
+  exec >$log_output 2>&1
+  unset log_output
 fi
-
-
-##############################################################
-## Parameters & Definitions
-
-export client=""
-export hostconf=""
-export insecure=""
-export debug=""
-
-
-# Parse command line options
-for x in $(cat /proc/cmdline); do
-    case $x in
-        hostconf=*)
-            hostconf=${x#hostconf=}
-            ;;
-        client=*)
-            client=${x#client=}
-            ;;
-        insecure)
-            insecure="-k"
-            ;;
-        debug)
-            debug="y"
-            ;;
-        esac
-done
-
-continue_or_shell()
-{
-    [ ! -z "$debug" ] \
-      && read -p "Press enter to continue or sh to enter shell: " IN \
-      && [ "sh" == "$IN" ] && sh
-}
-
-hostconf_get()
-{
-    while : ; do
-	curl "$insecure" $hostconf/$1/$client && break || \
-	    (read -p "Could not connect to hostconf. Press 'a' to try again or enter to reboot: " IN \
-		 && [ "a" != "$IN" ] && reboot -f)
-    done
-}
 
 # Don't do log messages here to avoid confusing graphical boots
 run_scripts /scripts/init-top
@@ -105,6 +61,48 @@ starttime=$((starttime + 1)) # round up
 export starttime
 
 ##############################################################
+## Parameters & Definitions
+
+export client=""
+export hostconf=""
+export insecure=""
+export debug=""
+
+# Parse command line options
+for x in $(cat /proc/cmdline); do
+  case $x in
+    hostconf=*)
+      hostconf=${x#hostconf=}
+      ;;
+    client=*)
+      client=${x#client=}
+      ;;
+    insecure)
+      insecure="-k"
+      ;;
+    debug)
+      debug="y"
+      ;;
+    esac
+done
+
+continue_or_shell()
+{
+  [ ! -z "$debug" ] \
+    && read -p "Press enter to continue or sh to enter shell: " IN \
+    && [ "sh" == "$IN" ] && sh
+}
+
+hostconf_get()
+{
+  while : ; do
+  curl "$insecure" $hostconf/$1/$client && break || \
+    (read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
+     && [ "r" == "$IN" ] && reboot -f)
+  done
+}
+
+##############################################################
 ## Begin install routine
 
 log_begin_msg "Loading essential drivers"
@@ -113,7 +111,7 @@ load_modules
 modprobe af_packet
 kos="fat vfat nls_cp437 nls_cp850 nls_ascii efivarfs"
 for ko in $kos; do
-    insmod $(find /usr/lib/modules -name $ko.ko)
+  insmod $(find /usr/lib/modules -name $ko.ko)
 done
 log_end_msg
 
@@ -178,45 +176,45 @@ log_end_msg
 continue_or_shell
 
 if [[ "$config" == "cloudinit" ]]; then
-    # vfat file systems with disk label "CIDATA" serve as config drives.
-    # https://cloudinit.readthedocs.io/en/22.2/topics/datasources/nocloud.html
-    log_begin_msg "Cloud-Init configuration: Creating cidata and resizing root partition."
-    if [ ! -z "$VGNAME" ]; then # handle image with lvm
-        PVDEV=$(pvs | tail -n 1 | cut -d' ' -f 3 | cut -d/ -f 3)
-        if [ ! -z "$PVDEV" ]; then
-          growpart /dev/$(echo $PVDEV | rev | cut -c2- | rev) $(echo $PVDEV | rev | cut -c1)
-        fi
-        lvcreate -L 4M -n cidata $VGNAME
-        yes | mkfs.vfat -n "CIDATA" /dev/$VGNAME/cidata
-        mount -t vfat /dev/$VGNAME/cidata /mnt/config
-    else # handle image without lvm
-        echo -e "ignore\n" | parted $install_to -- mkpart CIDATA fat32 -4MB -0
-        partprobe $install_to
-        PARTNUM=$(cat /proc/partitions | tail -n 1 | tr -d '[:space:]' | tail -c 1)
-        yes | mkfs.vfat -n "CIDATA" "${install_to}$PARTNUM"
-        growpart $install_to $(expr $PARTNUM - 1)
-        mount -t vfat "${install_to}$PARTNUM" /mnt/config
+  # vfat file systems with disk label "CIDATA" serve as config drives.
+  # https://cloudinit.readthedocs.io/en/22.2/topics/datasources/nocloud.html
+  log_begin_msg "Cloud-Init configuration: Creating cidata and resizing root partition."
+  if [ ! -z "$VGNAME" ]; then # handle image with lvm
+    PVDEV=$(pvs | tail -n 1 | cut -d' ' -f 3 | cut -d/ -f 3)
+    if [ ! -z "$PVDEV" ]; then
+      growpart /dev/$(echo $PVDEV | rev | cut -c2- | rev) $(echo $PVDEV | rev | cut -c1)
     fi
-    log_end_msg
+    lvcreate -L 4M -n cidata $VGNAME
+    yes | mkfs.vfat -n "CIDATA" /dev/$VGNAME/cidata
+    mount -t vfat /dev/$VGNAME/cidata /mnt/config
+  else # handle image without lvm
+    echo -e "ignore\n" | parted $install_to -- mkpart CIDATA fat32 -4MB -0
+    partprobe $install_to
+    PARTNUM=$(cat /proc/partitions | tail -n 1 | tr -d '[:space:]' | tail -c 1)
+    yes | mkfs.vfat -n "CIDATA" "${install_to}$PARTNUM"
+    growpart $install_to $(expr $PARTNUM - 1)
+    mount -t vfat "${install_to}$PARTNUM" /mnt/config
+  fi
+  log_end_msg
 
-    continue_or_shell
+  continue_or_shell
 
-    log_begin_msg "Downloading Cloud-Init configuration files to config-drive."
-        hostconf_get meta-data > /mnt/config/meta-data
-        hostconf_get network-config > /mnt/config/network-config
-        hostconf_get user-data > /mnt/config/user-data
-        umount /mnt/config
-    log_end_msg
+  log_begin_msg "Downloading Cloud-Init configuration files to config-drive."
+    hostconf_get meta-data > /mnt/config/meta-data
+    hostconf_get network-config > /mnt/config/network-config
+    hostconf_get user-data > /mnt/config/user-data
+    umount /mnt/config
+  log_end_msg
 
 elif [[ "$config" == "unattend" ]]; then
-    log_begin_msg "Unattended installation: Writing unattend.xml to disk."
-    mount "${install_to}4" /mnt/config
-    hostconf_get unattend > /mnt/config/unattend.xml
-    umount /mnt/config
-    log_end_msg
+  log_begin_msg "Unattended installation: Writing unattend.xml to disk."
+  mount "${install_to}4" /mnt/config
+  hostconf_get unattend > /mnt/config/unattend.xml
+  umount /mnt/config
+  log_end_msg
 else
-    echo "Configuration '$config' is not supported. Rebooting in 10 seconds ..."
-    reboot -f
+  echo "Configuration '$config' is not supported. Rebooting in 10 seconds ..."
+  reboot -f
 fi
 
 continue_or_shell
@@ -231,14 +229,14 @@ log_begin_msg "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 mount ${install_to}1 /mnt
 if [[ "$config" == "cloudinit" ]]; then # linux case
-    if [ -z "$(efibootmgr | grep Linux)" ]; then
-        SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g')
-        efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
-    fi
-    NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
-    efibootmgr --bootnext $NEXT
+  if [ -z "$(efibootmgr | grep Linux)" ]; then
+    SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g')
+    efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
+  fi
+  NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
+  efibootmgr --bootnext $NEXT
 else # windows case
-    echo "Windows case not handled yet"
+  echo "Windows case not handled yet"
 fi
 umount /mnt
 umount /sys/firmware/efi/efivars
@@ -247,5 +245,3 @@ log_end_msg
 continue_or_shell
 
 reboot -f
-
-
