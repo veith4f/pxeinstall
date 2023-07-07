@@ -13,7 +13,7 @@ Configuration
 =======================
 Copy and edit templates in cfg dir according to your needs. 
 
-'grub.cfg'
+grub.cfg
 -----------------------
 Definition of boot menu, kernel, ramdisk selection and cmdline with parameters.
 - Parameter 'hostconf' indicates where accompanying web service is found. In most cases, will be same as tftp server given in template. 
@@ -21,7 +21,7 @@ Definition of boot menu, kernel, ramdisk selection and cmdline with parameters.
 - Parameter 'debug' can be added to kernel cmdline, which will cause booting ramdisk to pause at set positions and allow dropping to shell or continue on keystrike which is useful for debugging purposes. 
 - Parameter 'insecure' allows querying web service with insecure certificate, i.e. curl -k option.
 
-'gpg.cfg'
+gpg.cfg
 -----------------------
 Concerns parameters of an ephemeral gpg key that is used to sign kernel, ramdisk and grub.cfg. Specified name and email address will appear in signatures.
 
