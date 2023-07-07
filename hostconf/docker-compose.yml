@@ -1,5 +1,5 @@
 services:
-  app:
+  hostconf:
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -11,7 +11,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.fastapi.rule=PathPrefix(`/`)"
       - "traefik.http.routers.fastapi.tls=true"
-  proxy:
+  traefik:
     image: traefik:v2.10.3
     command:
       - "--log.level=INFO"
