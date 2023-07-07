@@ -86,13 +86,6 @@ for x in $(cat /proc/cmdline); do
     esac
 done
 
-continue_or_shell()
-{
-  [ ! -z "$debug" ] \
-    && read -p "Press enter to continue or sh to enter shell: " IN \
-    && [ "sh" == "$IN" ] && sh
-}
-
 hostconf_get()
 {
   while : ; do
@@ -105,7 +98,9 @@ hostconf_get()
 begin()
 {
   log_begin_msg $1
-  continue_or_shell
+  [ ! -z "$debug" ] \
+    && read -p "Press enter to continue or sh to enter shell: " IN \
+    && [ "sh" == "$IN" ] && sh
 }
 
 end()
