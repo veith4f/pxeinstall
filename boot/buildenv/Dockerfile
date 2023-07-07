@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     cloud-guest-utils \
     gnupg \
     linux-image-amd64 \
+    openssl \
     make \
     binutils \
     bison \
