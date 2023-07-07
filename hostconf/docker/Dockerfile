@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 
 RUN mkdir -p /home/hostconf && \
 	addgroup --system hostconf && \

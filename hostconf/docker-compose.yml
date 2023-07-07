@@ -5,14 +5,13 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
         - ./app:/home/hostconf/app:ro
-    command: gunicorn -w 2 -b 0.0.0.0:5000 'hostconf:app' --log-level info --access-logfile "-"  --access-logformat '%(t)s %(H)s %(s)s %(m)s %(U)s %(h)s %(B)s bytes'
-
-    ports:
-      - "5000"
+    command: uvicorn hostconf:app --host 0.0.0.0 --port 80 --log-level info --use-colors
+    expose:
+      - 80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.flask.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.flask.tls=true"
+      - "traefik.http.routers.fastapi.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.fastapi.tls=true"
   proxy:
     image: traefik:v2.10.3
     command:
