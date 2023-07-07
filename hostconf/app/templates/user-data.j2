@@ -8,10 +8,12 @@ runcmd:
 {%- endfor %}
   - sh -c "if [ -f /etc/cloud/runcmd.sh ]; then /etc/cloud/runcmd.sh; fi"
 
-groups: {%- if groups | length == 0 %} [] {%- endif %}
+{%- if groups | length == 0 %}
+groups:
 {%- for group in groups %}
   - {{ group }}
 {%- endfor %}
+{%- endif %}
 
 {%- if users.items() | length > 0 %}
 users:
