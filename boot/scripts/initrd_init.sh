@@ -171,7 +171,7 @@ end
 if [[ "$config" == "cloudinit" ]]; then
   # vfat file systems with disk label "CIDATA" serve as config drives.
   # https://cloudinit.readthedocs.io/en/22.2/topics/datasources/nocloud.html
-  begin "Cloud-Init configuration: Creating cidata and resizing root partition."
+  begin "Creating cidata drive and resizing root partition."
   if [ ! -z "$VGNAME" ]; then # handle image with lvm
     PVDEV=$(pvs | tail -n 1 | cut -d' ' -f 3 | cut -d/ -f 3)
     if [ ! -z "$PVDEV" ]; then
@@ -190,7 +190,7 @@ if [[ "$config" == "cloudinit" ]]; then
   fi
   end
 
-  begin "Downloading Cloud-Init configuration files to config-drive."
+  begin "Downloading Cloud-Init configuration files to cidata drive."
   hostconf_get meta-data > /mnt/config/meta-data
   hostconf_get network-config > /mnt/config/network-config
   hostconf_get user-data > /mnt/config/user-data
