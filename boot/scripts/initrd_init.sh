@@ -97,6 +97,7 @@ hostconf_get()
 
 begin()
 {
+  echo
   [ "$debug" == "y" ] && sleep 2
   log_begin_msg $1
   [ ! -z "$debug" ] \
