@@ -224,7 +224,8 @@ elif [[ "$config" == "unattend" ]]; then
     umount /mnt/config
     log_end_msg
 else
-    echo "Configuration '$config' is not supported."
+    echo "Configuration '$config' is not supported. Rebooting in 10 seconds ..."
+    reboot -f
 fi
 
 continue_or_shell
