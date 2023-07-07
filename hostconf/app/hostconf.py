@@ -6,6 +6,10 @@ import uuid
 from yaml import SafeLoader
 from jinja2 import Environment, PackageLoader, select_autoescape
 
+##############################################################################
+# Sanity checks
+##############################################################################
+
 config_schema = Schema({
     "hosts": {
         str: {
@@ -55,12 +59,9 @@ if not config_schema.is_valid(config):
     config_schema.validate(config)
     raise SchemaError("Invalid schema: hostconf.yaml")
 
-
-app = Flask(__name__)
-env = Environment(
-    loader=PackageLoader(__name__),
-    autoescape=select_autoescape()
-)
+##############################################################################
+# Begin application
+##############################################################################
 
 def get_host_config(client):
     for hostname, host in config.get('hosts').items():
@@ -74,6 +75,12 @@ def return_if_found(host, fn):
         return fn(host), 200
     else:
         return "Not found", 404
+
+app = Flask(__name__)
+env = Environment(
+    loader=PackageLoader(__name__),
+    autoescape=select_autoescape()
+)
 
 @app.route("/osconfig/<client>")
 def install(client):

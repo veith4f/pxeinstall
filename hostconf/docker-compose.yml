@@ -5,7 +5,7 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
         - ./app:/home/hostconf/app:ro
-    command: gunicorn -w 2 -b 0.0.0.0:5000 'hostconf:app' --log-level info --access-logfile "-"  --access-logformat '%(t)s %(s)s %(m)s %(U)s %(h)s %(D)s'
+    command: gunicorn -w 2 -b 0.0.0.0:5000 'hostconf:app' --log-level info --access-logfile "-"  --access-logformat '%(t)s %(H)s %(s)s %(m)s %(U)s %(h)s %(B)s bytes'
 
     ports:
       - "5000"
