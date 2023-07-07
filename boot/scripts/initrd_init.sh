@@ -102,10 +102,21 @@ hostconf_get()
   done
 }
 
+begin()
+{
+  log_begin_msg $1
+  continue_or_shell
+}
+
+end()
+{
+  log_end_msg
+}
+
 ##############################################################
 ## Begin install routine
 
-log_begin_msg "Loading essential drivers"
+begin "Loading essential drivers"
 [ -n "${netconsole}" ] && /sbin/modprobe netconsole netconsole="${netconsole}"
 load_modules
 modprobe af_packet
@@ -113,72 +124,57 @@ kos="fat vfat nls_cp437 nls_cp850 nls_ascii efivarfs"
 for ko in $kos; do
   insmod $(find /usr/lib/modules -name $ko.ko)
 done
-log_end_msg
+end
 
-continue_or_shell
-
-log_begin_msg "Configure networking"
+begin "Configure networking"
 configure_networking
-log_end_msg
+end
 
-continue_or_shell
-
-log_begin_msg "Query hostconf service for installation parameters"
+begin "Query hostconf service for installation parameters"
 osconfig=$(hostconf_get osconfig)
 install=$(echo "$osconfig" | sed '1q;d')
 install_to=$(echo "$osconfig" | sed '2q;d')
 config=$(echo "$osconfig" | sed '3q;d')
-echo "Image:       $install"
-echo "Local Disk:  $install_to"
-echo "Config:      $config"
-log_end_msg
-
-continue_or_shell
-
-log_begin_msg "Print layout of local disk $install_to"
-parted $install_to print
-log_end_msg
-
-continue_or_shell
-
-log_begin_msg "Preparing local disk"
-vgchange -an
-dd if=/dev/zero of=$install_to bs=1M count=10
-echo -e "yes\n" | parted $install_to mklabel gpt
-log_end_msg
-
-continue_or_shell
-
 install_nfs=$(echo $install | sed 's|nfs://||g')
 fields=$(echo $install_nfs | tr -dc "/"| wc -c)
 mountpath=$(echo $install_nfs | cut -d/ -f1-$fields)
 image=$(echo $install_nfs | cut -d/ -f$(($fields + 1)))
-log_begin_msg "Mounting $mountpath to flash $image"
+echo "Image:       $image"
+echo " - on NFS:   $mountpath"
+echo "Local Disk:  $install_to"
+echo "Config:      $config"
+end
+
+begin "Print layout of local disk $install_to"
+parted $install_to print
+end
+
+begin "Preparing local disk"
+vgchange -an
+dd if=/dev/zero of=$install_to bs=1M count=10
+echo -e "yes\n" | parted $install_to mklabel gpt
+end
+
+begin "Mounting $mountpath to flash $image"
 nfsmount $mountpath /mnt/nfs
-log_end_msg
+end
 
-continue_or_shell
-
-log_begin_msg "Flashing Cloud-Image to disk"
+begin "Flashing Cloud-Image to disk"
 dd if=/mnt/nfs/$image of=$install_to
-log_end_msg
+end
 
-continue_or_shell
-
-log_begin_msg "Fix GPT header and probe for partitions"
+begin "Fix GPT header and probe for partitions"
 sleep 1
 echo -e "fix\n" | parted $install_to "print"
 partprobe $install_to
 vgchange -ay
 VGNAME=$(vgs --no-headings | cut -d' ' -f 3)
-log_end_msg
-
-continue_or_shell
+end
 
 if [[ "$config" == "cloudinit" ]]; then
   # vfat file systems with disk label "CIDATA" serve as config drives.
   # https://cloudinit.readthedocs.io/en/22.2/topics/datasources/nocloud.html
-  log_begin_msg "Cloud-Init configuration: Creating cidata and resizing root partition."
+  begin "Cloud-Init configuration: Creating cidata and resizing root partition."
   if [ ! -z "$VGNAME" ]; then # handle image with lvm
     PVDEV=$(pvs | tail -n 1 | cut -d' ' -f 3 | cut -d/ -f 3)
     if [ ! -z "$PVDEV" ]; then
@@ -195,37 +191,31 @@ if [[ "$config" == "cloudinit" ]]; then
     growpart $install_to $(expr $PARTNUM - 1)
     mount -t vfat "${install_to}$PARTNUM" /mnt/config
   fi
-  log_end_msg
+  end
 
-  continue_or_shell
-
-  log_begin_msg "Downloading Cloud-Init configuration files to config-drive."
-    hostconf_get meta-data > /mnt/config/meta-data
-    hostconf_get network-config > /mnt/config/network-config
-    hostconf_get user-data > /mnt/config/user-data
-    umount /mnt/config
-  log_end_msg
+  begin "Downloading Cloud-Init configuration files to config-drive."
+  hostconf_get meta-data > /mnt/config/meta-data
+  hostconf_get network-config > /mnt/config/network-config
+  hostconf_get user-data > /mnt/config/user-data
+  umount /mnt/config
+  end
 
 elif [[ "$config" == "unattend" ]]; then
-  log_begin_msg "Unattended installation: Writing unattend.xml to disk."
+  begin "Unattended installation: Writing unattend.xml to disk."
   mount "${install_to}4" /mnt/config
   hostconf_get unattend > /mnt/config/unattend.xml
   umount /mnt/config
-  log_end_msg
+  end
 else
-  echo "Configuration '$config' is not supported. Rebooting in 10 seconds ..."
+  echo "Configuration '$config' is not supported. Will reboot."
   reboot -f
 fi
 
-continue_or_shell
-
-log_begin_msg "Unmounting nfs"
+begin "Unmounting nfs"
 umount /mnt/nfs
-log_end_msg
+end
 
-continue_or_shell
-
-log_begin_msg "Arrange EFI boot order to boot disk on next boot"
+begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 mount ${install_to}1 /mnt
 if [[ "$config" == "cloudinit" ]]; then # linux case
@@ -240,8 +230,8 @@ else # windows case
 fi
 umount /mnt
 umount /sys/firmware/efi/efivars
-log_end_msg
+end
 
-continue_or_shell
-
+begin "Process completed. Will reboot."
 reboot -f
+end
