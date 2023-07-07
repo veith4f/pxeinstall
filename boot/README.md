@@ -11,7 +11,19 @@ Dependencies
 
 Configuration
 =======================
-Copy and edit templates in cfg dir according to your needs. 'grub.cfg' is responsible for boot menu, selection of kernel and ramdisk. Parameter 'hostconf' indicates where accompanying web service is found. In most cases, will be same as tftp server given in template. Parameter 'client' provides ramdisk's init script with mac adress of network adapter doing PXE. Parameter 'debug' can be added to kernel cmdline, which will cause booting ramdisk to pause at set positions and allow dropping to shell or continue on keystrike which is useful for debugging purposes. 'gpg.cfg' concerns parameters of an ephemeral gpg key that is used to sign kernel, ramdisk and grub.cfg. Specified name and email address will appear in signatures.
+Copy and edit templates in cfg dir according to your needs. 
+
+'grub.cfg'
+-----------------------
+Definition of boot menu, kernel, ramdisk selection and cmdline with parameters.
+- Parameter 'hostconf' indicates where accompanying web service is found. In most cases, will be same as tftp server given in template. 
+- Parameter 'client' provides ramdisk's init script with mac adress of network adapter doing PXE. 
+- Parameter 'debug' can be added to kernel cmdline, which will cause booting ramdisk to pause at set positions and allow dropping to shell or continue on keystrike which is useful for debugging purposes. 
+- Parameter 'insecure' allows querying web service with insecure certificate, i.e. curl -k option.
+
+'gpg.cfg'
+-----------------------
+Concerns parameters of an ephemeral gpg key that is used to sign kernel, ramdisk and grub.cfg. Specified name and email address will appear in signatures.
 
 
 Secure Boot Keys
