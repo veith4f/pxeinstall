@@ -16,10 +16,26 @@ Copy and edit templates in cfg dir according to your needs.
 grub.cfg
 -----------------------
 Definition of boot menu, kernel, ramdisk selection and cmdline with parameters.
-- Parameter 'hostconf' indicates where accompanying web service is found. Example: hotsconf="https://${net_default_server}"
-- Parameter 'client' provides ramdisk's init script with mac adress of network adapter doing PXE. Example: client="${net_default_mac}"
-- Parameter 'debug' can be added to kernel cmdline, which will cause booting ramdisk to stop at set positions and allow dropping to shell or continue on keystrike. Example: debug
-- Parameter 'insecure' allows querying web service with insecure certificate, i.e. curl -k option. Example: insecure
+- Parameter 'hostconf' indicates where accompanying web service is found. 
+Example:
+```
+hostconf="https://${net_default_server}"
+```
+- Parameter 'client' provides ramdisk's init script with mac adress of network adapter doing PXE. 
+Example:
+```
+client="${net_default_mac}"
+```
+- Parameter 'debug' can be added to kernel cmdline, which will cause booting ramdisk to stop at set positions and allow dropping to shell or continue on keystrike. 
+Example:
+```
+debug
+```
+- Parameter 'insecure' allows querying web service with insecure certificate, i.e. curl -k option.
+Example:
+```
+insecure
+```
 
 gpg.cfg
 -----------------------
