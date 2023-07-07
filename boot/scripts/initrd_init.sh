@@ -97,8 +97,7 @@ hostconf_get()
 
 begin()
 {
-  echo
-  [ "$debug" == "y" ] && sleep 1
+  [ "$debug" == "y" ] && sleep 1 && echo
   log_begin_msg $1
   [ ! -z "$debug" ] \
     && read -p "Press enter to continue or sh to enter shell: " IN \
