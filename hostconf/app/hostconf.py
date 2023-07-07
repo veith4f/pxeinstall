@@ -1,5 +1,5 @@
 from flask import Flask
-from schema import Schema, SchemaError, Regex
+from schema import Schema, Optional, SchemaError, Regex, Use
 import yaml
 import os
 import uuid
@@ -11,22 +11,48 @@ if not os.path.exists('hostconf.yaml'):
         "hostconf.yaml not found. See README.md for instructions.")
 
 config_schema = Schema({
-    "hosts": [
-        Regex(r'^([a-z]+[0-9-_]\.?[a-z]+[0-9])+$'): {
-            is_router: bool,
-            run_cmds: list(str),
-            install: str,
-            install_to: str
-            root_pw: str
+    "hosts": {
+        str: {
+            'install': str,
+            'install_to': str,
+            'config': str,
+            'root_pw': str,
+            'nameserver': str,
+            'users': {
+                str: {
+                    'primary_group': str,
+                    Optional('groups'): [str],
+                    Optional('gecos'): str,
+                    Optional('ssh_keys'): [str],
+                    Optional('sudo'): bool,
+                    Optional('uid'): int,
+                    Optional('shell'): str,
+                    Optional('lock_passwd'): bool,
+                }
+            },
+            'interfaces': {
+                str: {
+                    'mac': Regex(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'),
+                    'addresses': [str],
+                    'routes': [{
+                        'to': str,
+                        'via': str,
+                        Optional('metric'): str
+                    }]
+                }
+            },
+            Optional('run_cmds'): [str],
+            Optional('groups'): [str],
         }
-    ]
-})
+    }
+}, ignore_extra_keys=True)
 
 with open('hostconf.yaml', 'r') as f:
     config = yaml.load(f, Loader=SafeLoader)
 
-    if not schema.is_valid(conf):
-        raise RuntimeError("Invalid schema: hostconf.yaml")
+    if not config_schema.is_valid(config):
+        config_schema.validate(config)
+        raise SchemaError("Invalid schema: hostconf.yaml")
 
     app = Flask(__name__)
     env = Environment(
@@ -78,7 +104,6 @@ with open('hostconf.yaml', 'r') as f:
                                    'groups': host.get('groups', []),
                                    'root_pw': host.get('root_pw', None),
                                    'run_cmds': host.get('run_cmds', []),
-                                   'is_router': host.get('is_router', False)
                                }))
 
     @app.route("/meta-data/<client>")
@@ -102,6 +127,5 @@ with open('hostconf.yaml', 'r') as f:
                                    'groups': host.get('groups', []),
                                    'root_pw': host.get('root_pw', None),
                                    'run_cmds': host.get('run_cmds', []),
-                                   'is_router': host.get('is_router', False),
                                    'interfaces': host.get('interfaces', [])
                                }))

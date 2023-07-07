@@ -14,7 +14,6 @@ __defs__:
   debian_sda: &debian_sda
     <<: *config_ci
     <<: *ns_default
-    is_router: no
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
     install_to: /dev/sda
@@ -23,7 +22,6 @@ __defs__:
   alma_generic_sda: &alma_generic_sda
     <<: *config_ci
     <<: *ns_default
-    is_router: no
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-UEFI-8.8-20230524.x86_64.raw"
     install_to: /dev/sda
@@ -32,10 +30,10 @@ __defs__:
   windows_sda: &windows_sda
     <<: *config_ua
     <<: *ns_default
-    is_router: no
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/sda
+    root_pw: root
 
   default_routes: &default_routes
     routes:
@@ -83,4 +81,3 @@ hosts:
         <<: *default_routes
     <<: *default_users
     <<: *default_groups
-
