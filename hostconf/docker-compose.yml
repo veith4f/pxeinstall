@@ -5,7 +5,8 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
         - ./app:/home/hostconf/app:ro
-    command: uvicorn hostconf:app --host 0.0.0.0 --port 80 --log-level info --use-colors
+        - ./conf:/home/hostconf/conf:ro
+    command: uvicorn hostconf:app --host 0.0.0.0 --port 80 --log-config ../conf/logging.yaml
     expose:
       - 80
     labels:
