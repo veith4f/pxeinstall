@@ -4,6 +4,7 @@ from schema import Schema, Optional, SchemaError, Regex
 from jinja2 import Environment, PackageLoader, select_autoescape
 from yaml import SafeLoader
 from datetime import datetime
+from urllib.parse import urlsplit
 import uuid
 import os
 import yaml
@@ -129,11 +130,11 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 @app.get("/log")
-async def log():
+async def log(request: Request):
     template = env.get_template("log.j2")
     return Response(content=template.render({
-        'title': 'hostconf - logs',
-        'host': '192.168.178.20'
+        'title': __name__,
+        'host': urlsplit(request.url._url).hostname
     }), media_type="text/html")
 
 
