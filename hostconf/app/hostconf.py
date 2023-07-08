@@ -14,6 +14,7 @@ import asyncio
 # Sanity checks
 ##############################################################################
 
+
 config_schema = Schema({
     "hosts": {
         str: {
@@ -63,8 +64,9 @@ if not config_schema.is_valid(config):
     config_schema.validate(config)
     raise SchemaError("Invalid schema: hostconf.yaml")
 
+
 ##############################################################################
-# Defs
+# Helpers
 ##############################################################################
 
 
@@ -86,10 +88,6 @@ class WebSocketConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
-##############################################################################
-# Begin application
-##############################################################################
-
 
 def get_host_config(client):
     for hostname, host in config.get('hosts').items():
@@ -97,6 +95,11 @@ def get_host_config(client):
             if interface.get('mac') == client:
                 return hostname, host
     raise HTTPException(status_code=404, detail="Host not found: %s" % client)
+
+
+##############################################################################
+# Begin application
+##############################################################################
 
 
 app = FastAPI(title=__name__)
