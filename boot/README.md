@@ -1,6 +1,6 @@
 PXEinstall - boot
 =======================
-This is a build environment that outputs grub efi image, kernel, ramdisk and configuration files.
+Build environment that outputs grub efi image, kernel, ramdisk and configuration files.
 
 
 Dependencies
@@ -62,6 +62,14 @@ Creates custom signed ramdisk, kernel and grub image in output directory. Script
 make
 ```
 For convenience, there is also a GNU Makefile that executes both commands in sequence. Lengthy rebuild of build environment is only triggered if there are changes to buildenv/Docker, so this is usually just as fast as running docker-compose up.
+```
+make config
+```
+Generate grub.cfg and gpg.cfg with default options.
+```
+make keys
+```
+Generate sbkeys/db.key and sbkeys/db.cert. This is meant for testing.
 
 
 Output

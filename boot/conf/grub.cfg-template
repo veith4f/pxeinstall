@@ -6,6 +6,6 @@ menuentry "PXEinstall - Automated OS Installer" {
   echo "Please be patient ..."
   echo
 
-  linux vmlinuz hostconf="https://${net_default_server}" client="${net_default_mac}"
+  linux vmlinuz hostconf="https://${net_default_server}" client="${net_default_mac}" console=ttyS0
   initrd "initrd.img"
 }

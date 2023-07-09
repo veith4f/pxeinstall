@@ -35,7 +35,6 @@ export DPKG_ARCH=
 . /conf/arch.conf
 export quiet=
 
-
 # Bring in the main config
 . /conf/initramfs.conf
 for conf in conf/conf.d/*; do
@@ -89,15 +88,16 @@ done
 hostconf_get()
 {
   while : ; do
-  curl "$insecure" $hostconf/$1/$client && break || [ "$debug" == "y" ] \
+  (curl "$insecure" $hostconf/$1/$client && break) || ([ "$debug" == "y" ] \
      && read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
-     && [ "r" == "$IN" ] && reboot -f
+     && [ "r" == "$IN" ] && reboot -f) || \
+    (_log_msg "Could not connect to hostconf. Will reboot.\\n" && sleep 10 && reboot -f)
   done
 }
 
 begin()
 {
-  [ "$debug" == "y" ] && sleep 1 && echo
+  [ "$debug" == "y" ] && sleep 1 && _log_msg "\\n"
   log_begin_msg $1
   [ ! -z "$debug" ] \
     && read -p "Press enter to continue or sh to enter shell: " IN \
@@ -136,10 +136,10 @@ install_nfs=$(echo $install | sed 's|nfs://||g')
 fields=$(echo $install_nfs | tr -dc "/"| wc -c)
 mountpath=$(echo $install_nfs | cut -d/ -f1-$fields)
 image=$(echo $install_nfs | cut -d/ -f$(($fields + 1)))
-echo "Image:       $image"
-echo " - on NFS:   nfs://$mountpath"
-echo "Local Disk:  $install_to"
-echo "Config:      $config"
+_log_msg "Image:       $image"
+_log_msg " - on NFS:   nfs://$mountpath"
+_log_msg "Local Disk:  $install_to"
+_log_msg "Config:      $config"
 end
 
 begin "Print layout of local disk $install_to"
@@ -204,7 +204,7 @@ elif [[ "$config" == "unattend" ]]; then
   umount /mnt/config
   end
 else
-  echo "Configuration '$config' is not supported. Will reboot."
+  _log_msg "Configuration '$config' is not supported. Will reboot."
   reboot -f
 fi
 
@@ -223,7 +223,7 @@ if [[ "$config" == "cloudinit" ]]; then # linux case
   NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
   efibootmgr --bootnext $NEXT
 else # windows case
-  echo "Windows case not handled yet"
+  _log_msg "Windows case not handled yet"
 fi
 umount /mnt
 umount /sys/firmware/efi/efivars

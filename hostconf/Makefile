@@ -2,9 +2,10 @@
 
 .PHONY: cert
 cert:
-	@([ ! -f ./cert/key.pem ] || [ ! -f ./cert/cert.pem ]) && openssl req -newkey rsa:2048 \
+	@[ -f "$(shell which openssl)" ] || (echo "Please install 'openssl' to generate certificates." && exit 1)
+	@[ ! -f ./cert/key.pem ] || [ ! -f ./cert/cert.pem ] && openssl req -newkey rsa:2048 \
 			-new -nodes -x509 -days 3650 -keyout cert/key.pem -out cert/cert.pem \
-			-subj "/CN=hostconf.domain.tld/C=DE/O=Sopra Steria SE/" || true
+			-subj "/CN=hostconf.domain.tld/" || true
 
 .PHONY: default
 default:

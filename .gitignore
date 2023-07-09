@@ -8,3 +8,7 @@ boot/output/*
 __pycache__
 hostconf.yaml
 *.pem
+test/tftp/*
+!test/tftp/README.md
+test/disk/*
+!test/disk/README.md
