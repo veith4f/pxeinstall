@@ -200,9 +200,13 @@ if [[ "$config" == "cloudinit" ]]; then
 
 elif [[ "$config" == "unattend" ]]; then
   begin "Unattended installation: Writing unattend.xml to disk."
-  mount "${install_to}4" /mnt/config
-  hostconf_get unattend > /mnt/config/unattend.xml
-  umount /mnt/config
+  for x in "${install_to}*"; do
+    [ "$x" == "$install_to" ] && continue
+    mount "${x}" /mnt/config
+    if [ -f /mnt/config/unattend.xml.j2 ]; then
+      hostconf_put unattend $(cat /mnt/config/unattend.xml.j2) > /mnt/config/unattend.xml
+    fi
+    umount /mnt/config
   end
 else
   _log_msg "Configuration '$config' is not supported. Will reboot."
@@ -215,18 +219,33 @@ end
 
 begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-mount ${install_to}1 /mnt
 if [[ "$config" == "cloudinit" ]]; then # linux case
+  mount $(ls "${install_to}*" | sed '2q;d') /mnt
   if [ -z "$(efibootmgr | grep Linux)" ]; then
-    SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g')
+    SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g' | head -n 1)
     efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
   fi
   NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
   efibootmgr --bootnext $NEXT
+  umount /mnt
 else # windows case
-  _log_msg "Windows case not handled yet"
+  if [ -z "$(efibootmgr | grep WinInstall)" ]; then
+    i=1
+    for x in "${install_to}*"; do
+      [ "$x" == "$install_to" ] && continue
+      mount "${x}" /mnt
+      BMGR=$(find /mnt -name bootmgr.efi | cut -d/ -f 3- | sed 's|/|\\|g' | head -n 1)
+      if [ ! -z "$BMGR" ]; then
+        efibootmgr --create --disk=$x --part=$i --label=WinInstall --loader=$BMGR
+        umount /mnt
+        break
+      fi
+      umount /mnt
+      i=$(expr $i + 1)
+  fi
+  NEXT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
+  efibootmgr --bootnext $NEXT
 fi
-umount /mnt
 umount /sys/firmware/efi/efivars
 end
 
