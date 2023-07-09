@@ -236,7 +236,7 @@ if [[ "$config" == "cloudinit" ]]; then # linux case
     SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g' | head -n 1)
     efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
   fi
-  NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
+  NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
   efibootmgr --bootnext $NEXT
   umount /mnt
 else # windows case
@@ -253,8 +253,9 @@ else # windows case
       fi
       umount /mnt
       i=$(expr $i + 1)
+    done
   fi
-  NEXT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4)
+  NEXT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
   efibootmgr --bootnext $NEXT
 fi
 umount /sys/firmware/efi/efivars
