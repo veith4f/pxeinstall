@@ -88,7 +88,7 @@ done
 hostconf_get()
 {
   while : ; do
-    (curl "$insecure" $hostconf/$1/$client && break) || \
+    curl "$insecure" $hostconf/$1/$client && break || \
     ([ "$debug" == "y" ] \
      && read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
      && [ "r" == "$IN" ] && reboot -f) || \
