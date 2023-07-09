@@ -6,3 +6,4 @@ services:
         - ./scripts:/root/scripts:ro
         - ./sbkeys:/root/sbkeys:ro
         - ./conf:/root/conf:ro
+    command: /root/scripts/mkstandalone.sh

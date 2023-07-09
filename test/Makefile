@@ -6,7 +6,7 @@ generate:
 		cat conf/grub.cfg-template | \
 			sed 's|^  linux.*|  linux vmlinuz hostconf=https://$$\{net_default_server\} \
 			client=$$\{net_default_mac\} console=ttyS0 insecure|g' > conf/grub.cfg && \
-		make && cp output/* ../test/tftp && \
+		make keys && make && cp output/* ../test/tftp && \
 			([ ! -f conf/_grub.cfg ] || mv conf/_grub.cfg conf/grub.cfg)
 
 .PHONY: default
