@@ -96,6 +96,17 @@ hostconf_get()
   done
 }
 
+hostconf_put()
+{
+  while : ; do
+    curl "$insecure" -X PUT $hostconf/$1/$client -H "Content-Type: application/json" -d "$2" && break || \
+    ([ "$debug" == "y" ] \
+     && read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
+     && [ "r" == "$IN" ] && reboot -f) || \
+    (sleep 10 && reboot -f)
+  done
+}
+
 begin()
 {
   [ "$debug" == "y" ] && sleep 1 && _log_msg "\\n"

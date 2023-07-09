@@ -1,10 +1,12 @@
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi import WebSocket, WebSocketDisconnect
+from pydantic import BaseModel
 from schema import Schema, Optional, SchemaError, Regex
 from jinja2 import Environment, PackageLoader, select_autoescape
 from yaml import SafeLoader
 from datetime import datetime
 from urllib.parse import urlsplit
+import logging
 import uuid
 import os
 import yaml
@@ -70,6 +72,9 @@ if not config_schema.is_valid(config):
 ##############################################################################
 
 
+class Text(BaseModel):
+    msg: str
+
 class WebSocketConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -133,7 +138,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 @app.get("/log")
-async def log(request: Request):
+async def log():
     template = env.get_template("log.j2")
     return Response(content=template.render({
         'title': __name__,
@@ -142,7 +147,7 @@ async def log(request: Request):
 
 
 @app.get("/osconfig/{client}")
-async def osconfig(client, request: Request):
+async def osconfig(client):
     hostname, host = get_host_config(client)
     template = env.get_template("osconfig.j2")
 
@@ -154,7 +159,7 @@ async def osconfig(client, request: Request):
 
 
 @app.get("/network-config/{client}")
-async def network_config(client, request: Request):
+async def network_config(client):
     hostname, host = get_host_config(client)
     template = env.get_template("network-config.j2")
 
@@ -164,7 +169,7 @@ async def network_config(client, request: Request):
 
 
 @app.get("/user-data/{client}")
-async def user_data(client, request: Request):
+async def user_data(client):
     hostname, host = get_host_config(client)
     template = env.get_template("user-data.j2")
 
@@ -178,7 +183,7 @@ async def user_data(client, request: Request):
 
 
 @app.get("/meta-data/{client}")
-async def meta_data(client, request: Request):
+async def meta_data(client):
     hostname, host = get_host_config(client)
     template = env.get_template("meta-data.j2")
 
@@ -188,8 +193,24 @@ async def meta_data(client, request: Request):
     }), media_type="text/yaml")
 
 
+@app.put("/unattend/{client}")
+async def unattend_put(client, request:Request):
+    template_str = (await request.body()).decode('utf-8')
+    hostname, host = get_host_config(client)
+    template = env.from_string(template_str)
+
+    return Response(content=template.render({
+        'hostname': hostname,
+        'users': host.get('users', []),
+        'groups': host.get('groups', []),
+        'root_pw': host.get('root_pw', None),
+        'run_cmds': host.get('run_cmds', []),
+        'interfaces': host.get('interfaces', [])
+    }), media_type="application/xml")
+
+
 @app.get("/unattend/{client}")
-async def unattend(client, request: Request):
+async def unattend(client):
     hostname, host = get_host_config(client)
     template = env.get_template("unattend.xml.j2")
 
