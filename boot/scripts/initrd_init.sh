@@ -211,13 +211,14 @@ if [[ "$config" == "cloudinit" ]]; then
 
 elif [[ "$config" == "unattend" ]]; then
   begin "Unattended installation: Writing unattend.xml to disk."
-  for x in "${install_to}*"; do
+  for x in ${install_to}*; do
     [ "$x" == "$install_to" ] && continue
     mount "${x}" /mnt/config
     if [ -f /mnt/config/unattend.xml.j2 ]; then
-      hostconf_put unattend $(cat /mnt/config/unattend.xml.j2) > /mnt/config/unattend.xml
+      hostconf_put unattend "$(cat /mnt/config/unattend.xml.j2)" > /mnt/config/unattend.xml
     fi
     umount /mnt/config
+  done
   end
 else
   _log_msg "Configuration '$config' is not supported. Will reboot."
@@ -242,7 +243,7 @@ if [[ "$config" == "cloudinit" ]]; then # linux case
 else # windows case
   if [ -z "$(efibootmgr | grep WinInstall)" ]; then
     i=1
-    for x in "${install_to}*"; do
+    for x in ${install_to}*; do
       [ "$x" == "$install_to" ] && continue
       mount "${x}" /mnt
       BMGR=$(find /mnt -name bootmgr.efi | cut -d/ -f 3- | sed 's|/|\\|g' | head -n 1)
