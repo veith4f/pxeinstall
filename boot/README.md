@@ -65,7 +65,7 @@ For convenience, there is also a GNU Makefile that executes both commands in seq
 ```
 make config
 ```
-Generate grub.cfg and gpg.cfg with default options.
+Create grub.cfg and gpg.cfg with default options. Will not overwrite existing files.
 ```
 make keys
 ```

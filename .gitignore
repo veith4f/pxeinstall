@@ -12,3 +12,4 @@ test/tftp/*
 !test/tftp/README.md
 test/disk/*
 !test/disk/README.md
+*.zip

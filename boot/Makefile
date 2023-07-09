@@ -12,10 +12,8 @@ keys:
 
 .PHONY: config
 config:
-	@cp conf/gpg.cfg-template conf/gpg.cfg
-	@cat conf/grub.cfg-template | \
-	sed 's|^  linux.*|  linux vmlinuz hostconf=https://$$\{net_default_server\} \
-		client=$$\{net_default_mac\} console=ttyS0 insecure|g' > conf/grub.cfg
+	@[ -f "conf/gpg.cfg" ] && cp conf/gpg.cfg-template conf/gpg.cfg
+	@[ -f "conf/grub.cfg" ] && cp conf/grub.cfg-template conf/grub.cfg
 
 .PHONY: default
 default:

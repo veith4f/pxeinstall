@@ -11,3 +11,12 @@ cert:
 default:
 	docker-compose build
 	docker-compose up
+
+.PHONY: start
+start:
+	docker-compose build
+	docker-compose start
+
+.PHONY: stop
+stop:
+	docker-compose stop
