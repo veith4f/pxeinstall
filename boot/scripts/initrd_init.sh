@@ -253,10 +253,10 @@ if [ "$config" == "cloudinit" ]; then # linux case
 
 elif [ "$config" == "unattend" ] # windows case
   if [ -z "$(efibootmgr | grep WinInstall)" ]; then
-    mount $(ls ${install_to}* | sed '4q;d') /mnt
+    mount $(ls ${install_to}* | sed '5q;d') /mnt
     BMGR="/mnt/bootmgr.efi"
     if [ -f "$BMGR" ]; then
-      efibootmgr --create --disk=$install_to --part=3 --label=WinInstall --loader=$BMGR
+      efibootmgr --create --disk=$install_to --part=4 --label=WinInstall --loader=$BMGR
     fi
     umount /mnt
   fi
