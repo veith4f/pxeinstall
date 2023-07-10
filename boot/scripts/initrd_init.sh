@@ -109,7 +109,8 @@ hostconf_put()
 
 begin()
 {
-  [ "$debug" == "y" ] && sleep 1 && _log_msg "\\n"
+  [ "$debug" == "y" ] && sleep 1
+  log_msg ""
   log_begin_msg $1
   [ ! -z "$debug" ] \
     && read -p "Press enter to continue or sh to enter shell: " IN \
@@ -148,10 +149,10 @@ install_nfs=$(echo $install | sed 's|nfs://||g')
 fields=$(echo $install_nfs | tr -dc "/"| wc -c)
 mountpath=$(echo $install_nfs | cut -d/ -f1-$fields)
 image=$(echo $install_nfs | cut -d/ -f$(($fields + 1)))
-_log_msg "Image:       $image"
-_log_msg " - on NFS:   nfs://$mountpath"
-_log_msg "Local Disk:  $install_to"
-_log_msg "Config:      $config"
+log_msg "Image:       $image"
+log_msg " - on NFS:   nfs://$mountpath"
+log_msg "Local Disk:  $install_to"
+log_msg "Config:      $config"
 end
 
 begin "Print layout of local disk $install_to"
@@ -220,7 +221,7 @@ elif [[ "$config" == "unattend" ]]; then
   end
 
 else
-  _log_msg "Configuration '$config' is not supported.\\n"
+  log_msg "Configuration '$config' is not supported."
 
 fi
 
@@ -254,7 +255,7 @@ elif [ "$config" == "unattend" ] # windows case
   NEXT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 
 else
-  _log_msg "Setting boot order for config type '$config' is unsupported.\\n"
+  log_msg "Setting boot order for config type '$config' is unsupported."
 
 fi
 if [ ! -z "$NEXT" ]; then
