@@ -88,22 +88,30 @@ done
 hostconf_get()
 {
   while : ; do
-    curl "$insecure" $hostconf/$1/$client && break || \
-    ([ "$debug" == "y" ] \
-     && read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
-     && [ "r" == "$IN" ] && reboot -f) || \
-    (sleep 10 && reboot -f)
+    if $(curl "$insecure" $hostconf/$1/$client); then
+      break
+    fi
+    if [ "$debug" == "y" ]; then
+      read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN
+      [ "r" == "$IN" ] && reboot -f
+    else
+      log_msg "Could not connect to hostconf. Will reboot." && sleep 10 && reboot -f
+    fi
   done
 }
 
 hostconf_put()
 {
   while : ; do
-    curl "$insecure" -X PUT $hostconf/$1/$client -H "Content-Type: application/json" -d "$2" && break || \
-    ([ "$debug" == "y" ] \
-     && read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN \
-     && [ "r" == "$IN" ] && reboot -f) || \
-    (sleep 10 && reboot -f)
+    if $(curl "$insecure" -X PUT $hostconf/$1/$client -H "Content-Type: application/json" -d "$2"); then
+      break
+    fi
+    if [ "$debug" == "y" ]; then
+      read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN
+      [ "r" == "$IN" ] && reboot -f
+    else
+      log_msg "Could not connect to hostconf. Will reboot." && sleep 10 && reboot -f
+    fi
   done
 }
 
