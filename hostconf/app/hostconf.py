@@ -12,8 +12,9 @@ import os
 import yaml
 import asyncio
 
+
 ##############################################################################
-# Sanity checks
+# Helpers
 ##############################################################################
 
 
@@ -54,27 +55,6 @@ config_schema = Schema({
     }
 }, ignore_extra_keys=True)
 
-if not os.path.exists('hostconf.yaml'):
-    raise RuntimeError(
-        "hostconf.yaml not found. See README.md for instructions.")
-
-config = None
-with open('hostconf.yaml', 'r') as f:
-    config = yaml.load(f, Loader=SafeLoader)
-
-if not config_schema.is_valid(config):
-    config_schema.validate(config)
-    raise SchemaError("Invalid schema: hostconf.yaml")
-
-
-##############################################################################
-# Helpers
-##############################################################################
-
-
-class Text(BaseModel):
-    msg: str
-
 class WebSocketConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -93,13 +73,30 @@ class WebSocketConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
-
 def get_host_config(client):
     for hostname, host in config.get('hosts').items():
         for ifname, interface in host.get('interfaces').items():
             if interface.get('mac') == client:
                 return hostname, host
     raise HTTPException(status_code=404, detail="Host not found: %s" % client)
+
+
+##############################################################################
+# Sanity checks and Initialization
+##############################################################################
+
+
+if not os.path.exists('hostconf.yaml'):
+    raise RuntimeError(
+        "hostconf.yaml not found. See README.md for instructions.")
+
+config = None
+with open('hostconf.yaml', 'r') as f:
+    config = yaml.load(f, Loader=SafeLoader)
+
+if not config_schema.is_valid(config):
+    config_schema.validate(config)
+    raise SchemaError("Invalid schema: hostconf.yaml")
 
 
 ##############################################################################
