@@ -191,13 +191,14 @@ async def meta_data(client):
 
 
 @app.put("/unattend/{client}")
-async def unattend_put(client, request:Request):
+async def unattend(client, request:Request):
     template_str = (await request.body()).decode('utf-8')
     hostname, host = get_host_config(client)
     template = env.from_string(template_str)
 
     return Response(content=template.render({
         'hostname': hostname,
+        'nameserver': host.get('nameserver', None),
         'users': host.get('users', []),
         'groups': host.get('groups', []),
         'root_pw': host.get('root_pw', None),
