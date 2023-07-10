@@ -88,7 +88,7 @@ done
 hostconf_get()
 {
   while : ; do
-    if $(curl "$insecure" $hostconf/$1/$client); then
+    if curl "$insecure" $hostconf/$1/$client; then
       break
     fi
     if [ "$debug" == "y" ]; then
@@ -103,7 +103,7 @@ hostconf_get()
 hostconf_put()
 {
   while : ; do
-    if $(curl "$insecure" -X PUT $hostconf/$1/$client -H "Content-Type: application/json" -d "$2"); then
+    if curl "$insecure" -X PUT $hostconf/$1/$client -H "Content-Type: application/json" -d "$2"; then
       break
     fi
     if [ "$debug" == "y" ]; then
