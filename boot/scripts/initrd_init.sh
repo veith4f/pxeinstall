@@ -175,6 +175,7 @@ end
 begin "Fix GPT header and probe for partitions"
 sleep 1
 echo -e "fix\n" | parted $install_to "print"
+sleep 1
 partprobe $install_to
 vgchange -ay
 VGNAME=$(vgs --no-headings | cut -d' ' -f 3)
