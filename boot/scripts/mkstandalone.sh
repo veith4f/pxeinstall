@@ -117,7 +117,7 @@ cp -a /etc/ssl initrd/
 # fix log_begin_msg function
 sed -i 's/"Begin: %s ... "/"Begin: %s ... \\\\n"/g' initrd/scripts/functions
 # add new std log function log_msg
-sed -i '2 i\\nfunction log_msg() { _log_msg "%s\\n" "$*" }' initrd/scripts/functions
+sed -i '10 i\\nfunction log_msg()\n{\n\t_log_msg "%s\\\\n" "$*"\n}' initrd/scripts/functions
 # create mount dirs in ramdisk
 mkdir -p initrd/mnt/nfs initrd/mnt/config
 # create kernel and ramdisk in output dir
