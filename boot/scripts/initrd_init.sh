@@ -103,7 +103,7 @@ hostconf_get()
 hostconf_put()
 {
   while : ; do
-    if curl "$insecure" -X PUT $hostconf/$1/$client -H "Content-Type: application/json" -d "$2"; then
+    if curl "$insecure" -X PUT $hostconf/$1/$client -d "$2"; then
       break
     fi
     if [ "$debug" == "y" ]; then
