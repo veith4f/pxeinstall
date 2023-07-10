@@ -156,7 +156,7 @@ log_msg "Config:      $config"
 end
 
 begin "Print layout of local disk $install_to"
-echo -e "ignore\n" parted $install_to print
+echo -e "ignore\n" | parted $install_to print
 end
 
 begin "Preparing local disk"
