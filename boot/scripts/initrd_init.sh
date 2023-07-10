@@ -213,7 +213,7 @@ if [[ "$config" == "cloudinit" ]]; then
 
 elif [[ "$config" == "unattend" ]]; then
   begin "Unattended installation: Writing unattend.xml to disk."
-  mount $(ls "${install_to}*" | sed '4q;d') /mnt/config
+  mount $(ls ${install_to}* | sed '4q;d') /mnt/config
   if [ -f /mnt/config/unattend.xml.j2 ]; then
       hostconf_put unattend "$(cat /mnt/config/unattend.xml.j2)" > /mnt/config/unattend.xml
   fi
@@ -234,7 +234,7 @@ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 NEXT=
 if [ "$config" == "cloudinit" ]; then # linux case
   if [ -z "$(efibootmgr | grep Linux)" ]; then
-    mount $(ls "${install_to}*" | sed '2q;d') /mnt
+    mount $(ls ${install_to}* | sed '2q;d') /mnt
     SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g' | head -n 1)
     if [ ! -z "$SHIM" ]; then
       efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
@@ -245,7 +245,7 @@ if [ "$config" == "cloudinit" ]; then # linux case
 
 elif [ "$config" == "unattend" ] # windows case
   if [ -z "$(efibootmgr | grep WinInstall)" ]; then
-    mount $(ls "${install_to}*" | sed '4q;d') /mnt
+    mount $(ls ${install_to}* | sed '4q;d') /mnt
     BMGR="/mnt/bootmgr.efi"
     if [ -f "$BMGR" ]; then
       efibootmgr --create --disk=$install_to --part=3 --label=WinInstall --loader=$BMGR
