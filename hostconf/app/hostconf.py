@@ -23,8 +23,7 @@ config_schema = Schema({
         str: {
             'install': str,
             'install_to': str,
-            'config': str,
-            'nameserver': str,
+            'config': str,            
             'users': {
                 str: {
                     'primary_group': str,
@@ -35,6 +34,7 @@ config_schema = Schema({
                     Optional('uid'): int,
                     Optional('shell'): str,
                     Optional('lock_passwd'): bool,
+                    Optional('passwd'): str
                 }
             },
             'interfaces': {
@@ -48,7 +48,7 @@ config_schema = Schema({
                     }]
                 }
             },
-            Optional('root_pw'): str,
+            Optional('root_hash'): str,
             Optional('run_cmds'): [str],
             Optional('groups'): [str],
         }
@@ -174,7 +174,7 @@ async def user_data(client):
         'hostname': hostname,
         'users': host.get('users', []),
         'groups': host.get('groups', []),
-        'root_pw': host.get('root_pw', None),
+        'root_hash': host.get('root_hash', None),
         'run_cmds': host.get('run_cmds', []),
     }), media_type="text/yaml")
 
@@ -198,10 +198,9 @@ async def unattend(client, request:Request):
 
     return Response(content=template.render({
         'hostname': hostname,
-        'nameserver': host.get('nameserver', None),
         'users': host.get('users', []),
         'groups': host.get('groups', []),
-        'root_pw': host.get('root_pw', None),
+        'root_hash': host.get('root_hash', None),
         'run_cmds': host.get('run_cmds', []),
         'interfaces': host.get('interfaces', [])
     }), media_type="application/xml")

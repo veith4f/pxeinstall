@@ -49,8 +49,8 @@ users:
     {%- if 'lock_passwd' in user %}
     lock_passwd: {{ user.get('lock_passwd') }}
     {%- endif %}
-    {%- if 'plain_text_passwd' in user %}
-    plain_text_passwd: {{ user.get('plain_text_passwd') }}
+    {%- if 'passwd' in user %}
+    passwd: {{ user.get('passwd') }}
     {%- endif %}
 {%- endfor %}
 {%- endif %}
@@ -59,10 +59,11 @@ disable_root: true
 
 ssh_pwauth: false
 
-{%- if root_pw is not none %}
+{%- if root_hash is not none %}
 chpasswd:
   expire: false
-  list:
-    - root:{{ root_pw }}
+  users:
+    - name: root
+      password: {{ root_hash }}
 {%- endif %}
 

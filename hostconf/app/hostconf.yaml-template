@@ -5,35 +5,29 @@ __defs__:
   config_ci: &config_ci
     config: "cloudinit"
 
-  ns_default: &ns_default
-    nameserver: 192.168.234.254
-
   ansible_url: &ansible_url
     ansible_notify: ansible.servers.ils.bayern.de
 
   debian_sda: &debian_sda
     <<: *config_ci
-    <<: *ns_default
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
     install_to: /dev/sda
-    root_pw: root
+    root_hash: $6$rounds=4096$DgGFhjiGnR4uyXpd$g.nbeit6CP5xj/nQJcJ5HleoSVw3TrPACF8GOT43aFGRNibg6Lr8.YES9YoDmrdZdbPYnuKGvz1DD.uaTqrtr/ # root
 
   alma_generic_sda: &alma_generic_sda
     <<: *config_ci
-    <<: *ns_default
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-UEFI-8.8-20230524.x86_64.raw"
     install_to: /dev/sda
-    root_pw: root
+    root_hash: $6$rounds=4096$DgGFhjiGnR4uyXpd$g.nbeit6CP5xj/nQJcJ5HleoSVw3TrPACF8GOT43aFGRNibg6Lr8.YES9YoDmrdZdbPYnuKGvz1DD.uaTqrtr/ # root
 
   windows_sda: &windows_sda
     <<: *config_ua
-    <<: *ns_default
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/sda
-    root_pw: root
+    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
 
   default_routes: &default_routes
     routes:
@@ -48,6 +42,7 @@ __defs__:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCunNO9B/M9wsydz/jUbm3nFmZHu85SsFkwvX+xg6heF93ssBgjYpKtJfkpPSZwX8O5Jdosn9NhjgxZ0AoG7sIjOLkbvrHUPHD/qhmWhR3/EhlGaZOVwLZi1rYZbkhIY9Skbbto+OPZw/0ZNcQ5hPubx+Fni4wFUM2dAd6Qcph9532untX1VvHlhniq4TMJ8omO3vLFd2WbpjR4lbOXR9YjbenNFuF7OVOCeFfm0ibXyw+H5GxzxQ8fmCSt1zbCjYqFdnBnNtqGlDiKTABGD8Goo4kYnxlUnIbRBtO2vdQJEi22h7OdqlagItW0UricIipgp9/WWhTMNybvM2i6YtqEPT0CCtaOS14kzXZsIXzKEPkEHJSZZ0NHXzW4OxfkrShv8R45WuKxwP9KcRL6QXkwSFWwy3Sa/67Za+i0RG0mlnw6+dY3Lq3uf+yy2i5lxNjpujcaPzP/UkBKiY6X7pXQo5sFCWbB2lU6X5vb+TAQXMd7pjzBQHXBdLDY45/540jNglX5T3Wt+O0K+lpBRtDMTEK3HHfU8X7VOLlLszN6tRnEU+qHhehBRp4XnFNnEBtI7jLJfDM6qUH4/MLkhoLL1XNnv6GF8xzOPnYbQV6udNJ2gclHi2P5LSzY7y5/d+TKlFlYOzaD3J+zJo1dswrl80Jp5iloGHon4Bp+bWpGXw==
         sudo: yes
         uid: 1001
+	passwd: $6$rounds=4096$pZ1MeqCqNWBl7T5u$x7LMB7PJAqvQfqL8yv/p1Ma9OQnB7xG2VfzVhQVQvyhnNz8kYmXxOUb5r5fW.xaUTqoF2hWaCoZopEh/p/KM90 # ansible
         shell: /bin/bash
         primary_group: ansible
         lock_passwd: yes
@@ -61,7 +56,7 @@ __defs__:
 
 hosts:
   test1.client.ils13.bayern.de:
-    <<: *debian_sda
+    <<: *windows_sda
     interfaces:
       eth0:
         mac: "ee:4a:6a:a1:04:47"
@@ -72,7 +67,7 @@ hosts:
     <<: *default_groups
 
   test2.client.ils13.bayern.de:
-    <<: *windows_sda
+    <<: *debian_sda
     interfaces:
       eth0:
         mac: "ee:4a:6a:a1:04:49"
