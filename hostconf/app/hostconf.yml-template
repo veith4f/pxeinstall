@@ -2,7 +2,7 @@ hosts:
   - name: mywindowsclient1
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
-    install_to: /dev/
+    install_to: /dev/nvme0n1
     root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
     interfaces:
@@ -23,7 +23,7 @@ hosts:
   - name: mywindowsclient2
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
-    install_to: /dev/
+    install_to: /dev/nvme0n1
     root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
     interfaces:
