@@ -20,7 +20,7 @@ import asyncio
 
 config_schema = Schema({
     "hosts": [{
-        'name': str
+        'name': str,
         'install': str,
         'install_to': str,
         'config': str,

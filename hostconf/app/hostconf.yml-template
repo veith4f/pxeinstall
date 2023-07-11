@@ -1,48 +1,66 @@
-__defs__:
-  config_ua: &config_ua
-    config: "unattend"
-
-  config_ci: &config_ci
-    config: "cloudinit"
-
-  ansible_url: &ansible_url
-    ansible_notify: ansible.servers.ils.bayern.de
-
-  debian_sda: &debian_sda
-    <<: *config_ci
-    run_cmds: []
-    install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
-    install_to: /dev/sda
-    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
-
-  alma_generic_sda: &alma_generic_sda
-    <<: *config_ci
-    run_cmds: []
-    install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-UEFI-8.8-20230524.x86_64.raw"
-    install_to: /dev/sda
-    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
-
-  windows_sda: &windows_sda
-    <<: *config_ua
-    run_cmds: []
+hosts:
+  - name: mywindowsclient1
+    config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
-    install_to: /dev/sda
+    install_to: /dev/
     root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
-
-  default_routes: &default_routes
-    routes:
-      - to: "0.0.0.0/0"
-        via: "192.168.234.254"
-
-  windows_users: &windows_users
+    run_cmds: []
+    interfaces:
+      Ethernet:
+        mac: "ee:4a:6a:a1:04:40"
+        dhcp: true
+    groups:
+      - ansible
     users:
       ansible:
         gecos: 'Ansible System User'
-        passwd: 209c6174da490caeb422f3fa5a7ae634
+        passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
         lock_passwd: false
         primary_group: Administratoren
+        groups:
+          - ansible
 
-  default_users: &default_users
+  - name: mywindowsclient2
+    config: unattend
+    install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
+    install_to: /dev/
+    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
+    run_cmds: []
+    interfaces:
+      Ethernet:
+        mac: "ee:4a:6a:a1:04:47"
+        addresses:
+          - 192.168.234.233/24
+        routes:
+          - to: 0.0.0.0/0
+            via: 192.168.234.254
+    groups:
+      - ansible
+    users:
+      ansible:
+        gecos: 'Ansible System User'
+        passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
+        lock_passwd: false
+        primary_group: Administratoren
+        groups:
+          - ansible
+
+  - name: mylinuxserver
+    config: cloudinit
+    install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
+    install_to: /dev/sda
+    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
+    run_cmds: []
+    interfaces:
+      eth0:
+        mac: "ee:4a:6a:a1:04:49"
+        addresses:
+          - 192.168.234.249/24
+        routes:
+          - to: 0.0.0.0/0
+            via: 192.168.234.254
+    groups:
+      - ansible
     users:
       ansible:
         gecos: 'Ansible System User'
@@ -57,39 +75,3 @@ __defs__:
         groups:
           - wheel
           - adm
-
-  default_groups: &default_groups
-    groups:
-      - ansible
-
-hosts:
-  - name: mywindowsclient
-    <<: *windows_sda
-    interfaces:
-      Ethernet:
-        mac: "ee:4a:6a:a1:04:40"
-        dhcp: true
-    <<: *windows_user
-    <<: *default_groups
-
-  - name: myhostname
-    <<: *windows_sda
-    interfaces:
-      Ethernet:
-        mac: "ee:4a:6a:a1:04:47"
-        addresses:
-          - 192.168.234.244/24
-        <<: *default_routes
-    <<: *windows_user
-    <<: *default_groups
-
-  - name: myhostname
-    <<: *debian_sda
-    interfaces:
-      eth0:
-        mac: "ee:4a:6a:a1:04:49"
-        addresses:
-          - 192.168.234.249/24
-        <<: *default_routes
-    <<: *default_users
-    <<: *default_groups
