@@ -13,14 +13,14 @@ __defs__:
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
     install_to: /dev/sda
-    root_hash: $6$rounds=4096$DgGFhjiGnR4uyXpd$g.nbeit6CP5xj/nQJcJ5HleoSVw3TrPACF8GOT43aFGRNibg6Lr8.YES9YoDmrdZdbPYnuKGvz1DD.uaTqrtr/ # root
+    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
 
   alma_generic_sda: &alma_generic_sda
     <<: *config_ci
     run_cmds: []
     install: "nfs://192.168.234.233:/srv/nfs/AlmaLinux-8-GenericCloud-UEFI-8.8-20230524.x86_64.raw"
     install_to: /dev/sda
-    root_hash: $6$rounds=4096$DgGFhjiGnR4uyXpd$g.nbeit6CP5xj/nQJcJ5HleoSVw3TrPACF8GOT43aFGRNibg6Lr8.YES9YoDmrdZdbPYnuKGvz1DD.uaTqrtr/ # root
+    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
 
   windows_sda: &windows_sda
     <<: *config_ua

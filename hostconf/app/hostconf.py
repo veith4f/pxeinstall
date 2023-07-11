@@ -86,17 +86,17 @@ def get_host_config(client):
 ##############################################################################
 
 
-if not os.path.exists('hostconf.yaml'):
+if not os.path.exists('hostconf.yml'):
     raise RuntimeError(
-        "hostconf.yaml not found. See README.md for instructions.")
+        "hostconf.yml not found. See README.md for instructions.")
 
 config = None
-with open('hostconf.yaml', 'r') as f:
+with open('hostconf.yml', 'r') as f:
     config = yaml.load(f, Loader=SafeLoader)
 
 if not config_schema.is_valid(config):
     config_schema.validate(config)
-    raise SchemaError("Invalid schema: hostconf.yaml")
+    raise SchemaError("Invalid schema: hostconf.yml")
 
 
 ##############################################################################
