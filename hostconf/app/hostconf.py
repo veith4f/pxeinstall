@@ -40,8 +40,8 @@ config_schema = Schema({
             'interfaces': {
                 str: {
                     'mac': Regex(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'),
-                    'addresses': [str],
                     Optional('dhcp'): bool,
+                    Optional('addresses'): [str],
                     Optional('routes'): [{
                         'to': str,
                         'via': str,
