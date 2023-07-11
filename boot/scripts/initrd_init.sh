@@ -251,7 +251,7 @@ if [ "$config" == "cloudinit" ]; then # linux case
   fi
   NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 
-elif [ "$config" == "unattend" ] # windows case
+elif [ "$config" == "unattend" ]; then # windows case
   if [ -z "$(efibootmgr | grep WinInstall)" ]; then
     mount $(ls ${install_to}* | sed '5q;d') /mnt
     BMGR="/mnt/bootmgr.efi"
