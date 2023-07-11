@@ -6,8 +6,7 @@ ethernets:
     match:
       macaddress: "{{ iface.get('mac') }}"
     set-name: {{ name }}
-    dhcp4: {%- if 'dhcp4' in iface %} {{ iface.get('dhcp4') }} {% else %} false {%- endif %}
-    dhcp6: {%- if 'dhcp6' in iface %} {{ iface.get('dhcp6') }} {% else %} false {%- endif %}
+    dhcp4: {%- if 'dhcp' in iface %} {{ iface.get('dhcp') }} {% else %} false {%- endif %}
     {%- if 'routes' in iface and iface.get('routes') | length > 0 %}
     routes:
       {%- for route in iface.get('routes') %}

@@ -23,7 +23,7 @@ config_schema = Schema({
         str: {
             'install': str,
             'install_to': str,
-            'config': str,            
+            'config': str,
             'users': {
                 str: {
                     'primary_group': str,
@@ -41,7 +41,8 @@ config_schema = Schema({
                 str: {
                     'mac': Regex(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'),
                     'addresses': [str],
-                    'routes': [{
+                    Optional('dhcp'): bool,
+                    Optional('routes'): [{
                         'to': str,
                         'via': str,
                         Optional('metric'): str
