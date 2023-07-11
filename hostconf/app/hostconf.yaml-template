@@ -42,7 +42,7 @@ __defs__:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCunNO9B/M9wsydz/jUbm3nFmZHu85SsFkwvX+xg6heF93ssBgjYpKtJfkpPSZwX8O5Jdosn9NhjgxZ0AoG7sIjOLkbvrHUPHD/qhmWhR3/EhlGaZOVwLZi1rYZbkhIY9Skbbto+OPZw/0ZNcQ5hPubx+Fni4wFUM2dAd6Qcph9532untX1VvHlhniq4TMJ8omO3vLFd2WbpjR4lbOXR9YjbenNFuF7OVOCeFfm0ibXyw+H5GxzxQ8fmCSt1zbCjYqFdnBnNtqGlDiKTABGD8Goo4kYnxlUnIbRBtO2vdQJEi22h7OdqlagItW0UricIipgp9/WWhTMNybvM2i6YtqEPT0CCtaOS14kzXZsIXzKEPkEHJSZZ0NHXzW4OxfkrShv8R45WuKxwP9KcRL6QXkwSFWwy3Sa/67Za+i0RG0mlnw6+dY3Lq3uf+yy2i5lxNjpujcaPzP/UkBKiY6X7pXQo5sFCWbB2lU6X5vb+TAQXMd7pjzBQHXBdLDY45/540jNglX5T3Wt+O0K+lpBRtDMTEK3HHfU8X7VOLlLszN6tRnEU+qHhehBRp4XnFNnEBtI7jLJfDM6qUH4/MLkhoLL1XNnv6GF8xzOPnYbQV6udNJ2gclHi2P5LSzY7y5/d+TKlFlYOzaD3J+zJo1dswrl80Jp5iloGHon4Bp+bWpGXw==
         sudo: yes
         uid: 1001
-	passwd: $6$rounds=4096$pZ1MeqCqNWBl7T5u$x7LMB7PJAqvQfqL8yv/p1Ma9OQnB7xG2VfzVhQVQvyhnNz8kYmXxOUb5r5fW.xaUTqoF2hWaCoZopEh/p/KM90 # ansible
+        passwd: $6$rounds=4096$pZ1MeqCqNWBl7T5u$x7LMB7PJAqvQfqL8yv/p1Ma9OQnB7xG2VfzVhQVQvyhnNz8kYmXxOUb5r5fW.xaUTqoF2hWaCoZopEh/p/KM90 # ansible
         shell: /bin/bash
         primary_group: ansible
         lock_passwd: yes
