@@ -19,41 +19,40 @@ import asyncio
 
 
 config_schema = Schema({
-    "hosts": {
-        str: {
-            'install': str,
-            'install_to': str,
-            'config': str,
-            'users': {
-                str: {
-                    'primary_group': str,
-                    Optional('groups'): [str],
-                    Optional('gecos'): str,
-                    Optional('ssh_keys'): [str],
-                    Optional('sudo'): bool,
-                    Optional('uid'): int,
-                    Optional('shell'): str,
-                    Optional('lock_passwd'): bool,
-                    Optional('passwd'): str
-                }
-            },
-            'interfaces': {
-                str: {
-                    'mac': Regex(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'),
-                    Optional('dhcp'): bool,
-                    Optional('addresses'): [str],
-                    Optional('routes'): [{
-                        'to': str,
-                        'via': str,
-                        Optional('metric'): str
-                    }]
-                }
-            },
-            Optional('root_hash'): str,
-            Optional('run_cmds'): [str],
-            Optional('groups'): [str],
-        }
-    }
+    "hosts": [{
+        'name': str
+        'install': str,
+        'install_to': str,
+        'config': str,
+        'users': {
+            str: {
+                'primary_group': str,
+                Optional('groups'): [str],
+                Optional('gecos'): str,
+                Optional('ssh_keys'): [str],
+                Optional('sudo'): bool,
+                Optional('uid'): int,
+                Optional('shell'): str,
+                Optional('lock_passwd'): bool,
+                Optional('passwd'): str
+            }
+        },
+        'interfaces': {
+            str: {
+                'mac': Regex(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'),
+                Optional('dhcp'): bool,
+                Optional('addresses'): [str],
+                Optional('routes'): [{
+                    'to': str,
+                    'via': str,
+                    Optional('metric'): str
+                }]
+            }
+        },
+        Optional('root_hash'): str,
+        Optional('run_cmds'): [str],
+        Optional('groups'): [str],
+    }]
 }, ignore_extra_keys=True)
 
 class WebSocketConnectionManager:
@@ -75,10 +74,10 @@ class WebSocketConnectionManager:
             await connection.send_text(message)
 
 def get_host_config(client):
-    for hostname, host in config.get('hosts').items():
+    for host in config.get('hosts'):
         for ifname, interface in host.get('interfaces').items():
             if interface.get('mac') == client:
-                return hostname, host
+                return host
     raise HTTPException(status_code=404, detail="Host not found: %s" % client)
 
 
@@ -146,7 +145,7 @@ async def log():
 
 @app.get("/osconfig/{client}")
 async def osconfig(client):
-    hostname, host = get_host_config(client)
+    host = get_host_config(client)
     template = env.get_template("osconfig.j2")
 
     return Response(content=template.render({
@@ -158,7 +157,7 @@ async def osconfig(client):
 
 @app.get("/network-config/{client}")
 async def network_config(client):
-    hostname, host = get_host_config(client)
+    host = get_host_config(client)
     template = env.get_template("network-config.j2")
 
     return Response(content=template.render({
@@ -168,11 +167,11 @@ async def network_config(client):
 
 @app.get("/user-data/{client}")
 async def user_data(client):
-    hostname, host = get_host_config(client)
+    host = get_host_config(client)
     template = env.get_template("user-data.j2")
 
     return Response(content=template.render({
-        'hostname': hostname,
+        'hostname': host.get('name'),
         'users': host.get('users', []),
         'groups': host.get('groups', []),
         'root_hash': host.get('root_hash', None),
@@ -182,23 +181,23 @@ async def user_data(client):
 
 @app.get("/meta-data/{client}")
 async def meta_data(client):
-    hostname, host = get_host_config(client)
+    host = get_host_config(client)
     template = env.get_template("meta-data.j2")
 
     return Response(content=template.render({
         'instance_id': uuid.uuid4(),
-        'hostname': hostname
+        'hostname': host.get('name')
     }), media_type="text/yaml")
 
 
 @app.put("/unattend/{client}")
 async def unattend(client, request:Request):
     template_str = (await request.body()).decode('utf-8')
-    hostname, host = get_host_config(client)
+    host = get_host_config(client)
     template = env.from_string(template_str)
 
     return Response(content=template.render({
-        'hostname': hostname,
+        'hostname': host.get('name'),
         'users': host.get('users', []),
         'groups': host.get('groups', []),
         'root_hash': host.get('root_hash', None),

@@ -34,6 +34,14 @@ __defs__:
       - to: "0.0.0.0/0"
         via: "192.168.234.254"
 
+  windows_users: &windows_users
+    users:
+      ansible:
+        gecos: 'Ansible System User'
+        passwd: 209c6174da490caeb422f3fa5a7ae634
+        lock_passwd: false
+        primary_group: Administratoren
+
   default_users: &default_users
     users:
       ansible:
@@ -55,18 +63,27 @@ __defs__:
       - ansible
 
 hosts:
-  test1.client.ils13.bayern.de:
+  - name: mywindowsclient
     <<: *windows_sda
     interfaces:
-      eth0:
+      Ethernet:
+        mac: "ee:4a:6a:a1:04:40"
+        dhcp: true
+    <<: *windows_user
+    <<: *default_groups
+
+  - name: myhostname
+    <<: *windows_sda
+    interfaces:
+      Ethernet:
         mac: "ee:4a:6a:a1:04:47"
         addresses:
           - 192.168.234.244/24
         <<: *default_routes
-    <<: *default_users
+    <<: *windows_user
     <<: *default_groups
 
-  test2.client.ils13.bayern.de:
+  - name: myhostname
     <<: *debian_sda
     interfaces:
       eth0:
