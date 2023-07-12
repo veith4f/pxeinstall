@@ -1,0 +1,149 @@
+{
+    "type": "object",
+    "properties": {
+        "hosts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "install": {
+                        "type": "string"
+                    },
+                    "install_to": {
+                        "type": "string"
+                    },
+                    "config": {
+                        "type": "string"
+                    },
+                    "root_hash": {
+                        "type": "string"
+                    },
+                    "run_cmds": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "users": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "minProperties": 1,
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "gecos": {
+                                    "type": "string"
+                                },
+                                "primary_group": {
+                                    "type": "string"
+                                },
+                                "groups": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "ssh_keys": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "sudo": {
+                                    "type": "boolean"
+                                },
+                                "uid": {
+                                    "type": "number"
+                                },
+                                "shell": {
+                                    "type": "string"
+                                },
+                                "lock_passwd": {
+                                    "type": "boolean"
+                                },
+                                "passwd": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "primary_group"
+                            ],
+                            "additionalProperties": false
+                        }
+                    },
+                    "interfaces": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "minProperties": 1,
+                            "properties": {
+                                "mac": {
+                                    "type": "string"
+                                },
+                                "dhcp": {
+                                    "type": "boolean"
+                                },
+                                "addresses": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "routes": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "to": {
+                                                "type": "string"
+                                            },
+                                            "via": {
+                                                "type": "string"
+                                            },
+                                            "metric": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "to",
+                                            "via"
+                                        ],
+                                        "additionalProperties": false
+                                    }
+                                }
+                            },
+                            "required": [
+                                "mac"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "install",
+                    "install_to",
+                    "config",
+                    "users",
+                    "interfaces"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "hosts"
+    ],
+    "additionalProperties": false
+}

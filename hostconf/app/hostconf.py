@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi import WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
-from schema import Schema, Optional, SchemaError, Regex
+from jsonschema import validate
 from jinja2 import Environment, PackageLoader, select_autoescape
 from yaml import SafeLoader
 from datetime import datetime
 from urllib.parse import urlsplit
-import logging
+import json
 import uuid
 import os
 import yaml
@@ -16,44 +16,6 @@ import asyncio
 ##############################################################################
 # Helpers
 ##############################################################################
-
-
-config_schema = Schema({
-    "hosts": [{
-        'name': str,
-        'install': str,
-        'install_to': str,
-        'config': str,
-        'users': {
-            str: {
-                'primary_group': str,
-                Optional('groups'): [str],
-                Optional('gecos'): str,
-                Optional('ssh_keys'): [str],
-                Optional('sudo'): bool,
-                Optional('uid'): int,
-                Optional('shell'): str,
-                Optional('lock_passwd'): bool,
-                Optional('passwd'): str
-            }
-        },
-        'interfaces': {
-            str: {
-                'mac': Regex(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'),
-                Optional('dhcp'): bool,
-                Optional('addresses'): [str],
-                Optional('routes'): [{
-                    'to': str,
-                    'via': str,
-                    Optional('metric'): str
-                }]
-            }
-        },
-        Optional('root_hash'): str,
-        Optional('run_cmds'): [str],
-        Optional('groups'): [str],
-    }]
-}, ignore_extra_keys=True)
 
 class WebSocketConnectionManager:
     def __init__(self):
@@ -94,9 +56,13 @@ config = None
 with open('hostconf.yml', 'r') as f:
     config = yaml.load(f, Loader=SafeLoader)
 
-if not config_schema.is_valid(config):
-    config_schema.validate(config)
-    raise SchemaError("Invalid schema: hostconf.yml")
+
+schema = None
+with open('hostconf.yml-schema', 'r') as f:
+    schema = json.load(f)
+
+
+validate(instance=config, schema=schema)
 
 
 ##############################################################################
