@@ -12,10 +12,10 @@ keys:
 
 .PHONY: config
 config:
-	@[ -f "conf/gpg.cfg" ] && cp conf/gpg.cfg-template conf/gpg.cfg
-	@[ -f "conf/grub.cfg" ] && cp conf/grub.cfg-template conf/grub.cfg
+	@[ -f "conf/gpg.cfg" ] || cp conf/gpg.cfg-template conf/gpg.cfg
+	@[ -f "conf/grub.cfg" ] || cp conf/grub.cfg-template conf/grub.cfg
 
 .PHONY: default
 default:
-	docker-compose build
-	docker-compose up
+	@docker-compose build
+	@docker-compose up
