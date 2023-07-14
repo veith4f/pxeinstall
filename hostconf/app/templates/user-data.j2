@@ -60,8 +60,7 @@ ssh_pwauth: false
 {%- if root_hash is not none %}
 chpasswd:
   expire: false
-  users:
-    - name: root
-      password: {{ root_hash }}
+  list:
+    - root:{{ root_hash }}
 {%- endif %}
 
