@@ -224,6 +224,8 @@ elif [[ "$config" == "unattend" ]]; then
   mount $(ls ${install_to}* | sed '5q;d') /mnt/config
   if [ -f /mnt/config/unattend.xml.j2 ]; then
       hostconf_put unattend "$(cat /mnt/config/unattend.xml.j2)" > /mnt/config/unattend.xml
+  else
+      hostconf_get unattend > /mnt/config/unattend.xml
   fi
   umount /mnt/config
   end

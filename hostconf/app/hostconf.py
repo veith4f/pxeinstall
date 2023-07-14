@@ -171,3 +171,17 @@ async def unattend(client, request:Request):
         'interfaces': host.get('interfaces', [])
     }), media_type="application/xml")
 
+
+@app.get("/unattend/{client}")
+async def unattend(client, request:Request):
+    host = get_host_config(client)
+    template = env.get_template("unattend.xml.j2")
+
+    return Response(content=template.render({
+        'hostname': host.get('name'),
+        'users': host.get('users', []),
+        'groups': host.get('groups', []),
+        'root_hash': host.get('root_hash', None),
+        'run_cmds': host.get('run_cmds', []),
+        'interfaces': host.get('interfaces', [])
+    }), media_type="application/xml")
