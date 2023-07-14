@@ -101,7 +101,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 @app.get("/log")
-async def log():
+async def log(request: Request):
     template = env.get_template("log.j2")
     return Response(content=template.render({
         'title': __name__,
