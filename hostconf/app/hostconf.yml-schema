@@ -27,6 +27,9 @@
                             "type": "string"
                         }
                     },
+                    "nameserver": {
+                        "type": "string"
+                    },
                     "groups": {
                         "type": "array",
                         "items": {
@@ -134,6 +137,7 @@
                     "name",
                     "install",
                     "install_to",
+                    "nameserver",
                     "config",
                     "users",
                     "interfaces"

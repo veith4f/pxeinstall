@@ -5,6 +5,7 @@ hosts:
     install_to: /dev/nvme0n1
     root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
+    nameserver: 192.168.234.254
     interfaces:
       Ethernet:
         mac: "ee:4a:6a:a1:04:40"
@@ -26,6 +27,7 @@ hosts:
     install_to: /dev/nvme0n1
     root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
+    nameserver: 192.168.234.254
     interfaces:
       Ethernet:
         mac: "ee:4a:6a:a1:04:47"
@@ -51,6 +53,7 @@ hosts:
     install_to: /dev/sda
     root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
     run_cmds: []
+    nameserver: 192.168.234.254
     interfaces:
       eth0:
         mac: "ee:4a:6a:a1:04:49"

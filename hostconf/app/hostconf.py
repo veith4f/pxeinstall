@@ -35,6 +35,7 @@ class WebSocketConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
+
 def get_host_config(client):
     for host in config.get('hosts'):
         for ifname, interface in host.get('interfaces').items():
@@ -111,77 +112,54 @@ async def log(request: Request):
 
 @app.get("/osconfig/{client}")
 async def osconfig(client):
-    host = get_host_config(client)
     template = env.get_template("osconfig.j2")
+    host = get_host_config(client)
 
-    return Response(content=template.render({
-        'install': host.get('install'),
-        'install_to': host.get('install_to'),
-        'config': host.get('config')
-    }), media_type="text/string")
+    return Response(content=template.render(get_host_config(client)),
+                    media_type="text/string")
 
 
 @app.get("/network-config/{client}")
 async def network_config(client):
-    host = get_host_config(client)
     template = env.get_template("network-config.j2")
+    host = get_host_config(client)
 
-    return Response(content=template.render({
-        'interfaces':  host.get('interfaces', [])
-    }), media_type="text/yaml")
+    return Response(content=template.render(host),
+                    media_type="text/yaml")
 
 
 @app.get("/user-data/{client}")
 async def user_data(client):
-    host = get_host_config(client)
     template = env.get_template("user-data.j2")
+    host = get_host_config(client)
 
-    return Response(content=template.render({
-        'hostname': host.get('name'),
-        'users': host.get('users', []),
-        'groups': host.get('groups', []),
-        'root_hash': host.get('root_hash', None),
-        'run_cmds': host.get('run_cmds', []),
-    }), media_type="text/yaml")
+    return Response(content=template.render(host),
+                    media_type="text/yaml")
 
 
 @app.get("/meta-data/{client}")
 async def meta_data(client):
-    host = get_host_config(client)
     template = env.get_template("meta-data.j2")
 
     return Response(content=template.render({
-        'instance_id': uuid.uuid4(),
-        'hostname': host.get('name')
+            'instance_id': uuid.uuid4
     }), media_type="text/yaml")
 
 
 @app.put("/unattend/{client}")
-async def unattend(client, request:Request):
+async def unattend(client, request: Request):
     template_str = (await request.body()).decode('utf-8')
-    host = get_host_config(client)
     template = env.from_string(template_str)
+    host = get_host_config(client)
 
-    return Response(content=template.render({
-        'hostname': host.get('name'),
-        'users': host.get('users', []),
-        'groups': host.get('groups', []),
-        'root_hash': host.get('root_hash', None),
-        'run_cmds': host.get('run_cmds', []),
-        'interfaces': host.get('interfaces', [])
-    }), media_type="application/xml")
+    return Response(content=template.render(host),
+                    media_type="application/xml")
 
 
 @app.get("/unattend/{client}")
-async def unattend(client, request:Request):
-    host = get_host_config(client)
+async def unattend(client, request: Request):
     template = env.get_template("unattend.xml.j2")
+    host = get_host_config(client)
 
-    return Response(content=template.render({
-        'hostname': host.get('name'),
-        'users': host.get('users', []),
-        'groups': host.get('groups', []),
-        'root_hash': host.get('root_hash', None),
-        'run_cmds': host.get('run_cmds', []),
-        'interfaces': host.get('interfaces', [])
-    }), media_type="application/xml")
+    return Response(content=template.render(host),
+                    media_type="application/xml")
