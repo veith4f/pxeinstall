@@ -62,35 +62,41 @@
         <PreventDeviceEncryption>true</PreventDeviceEncryption>
         </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ComputerName>{{ hostname }}</ComputerName>
+            <ComputerName>{{ name }}</ComputerName>
             <UserAccounts>
                 <AdministratorPassword>
-                    <PlainText>true</PlainText>
-                    <Value>WqBklwRwAYigfka7N8J12Gcz</Value>
+                    <PlainText>false</PlainText>
+                    <Value>{{ root_hash }}</Value>
                 </AdministratorPassword>
             </UserAccounts>
         </component>
-{% if not interfaces[0].dhcp %}
-<Interfaces>
+    <Interfaces>
+    {%- for name, interface in interfaces.items() %}
     <Interface wcm:action="add">
         <Ipv4Settings>
-            <DhcpEnabled>False</DhcpEnabled>
+            <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
         </Ipv4Settings>
         <UnicastIpAddresses>
             <IpAddress wcm:action="add" wcm:keyValue="1">{{ interfaces[0].addresses[0] }}</IpAddress>
         </UnicastIpAddresses>
-        <Identifier>{{ interfaces[0].name }}</Identifier>
+        <Identifier>{{ name }}</Identifier>
+        {%- if 'routes' in interface %}
+        {%- for route in interface.get('routes') %}
         <Routes>
             <Route wcm:action="add">
-                <Identifier>1</Identifier>
-                <Prefix>0.0.0.0</Prefix>
-                <NextHopAddress>{{ interfaces[0].routes[0].via }}</NextHopAddress>
-                <Metric>{{ interfaces[0].addresses[0].split('/')[1] }}</Metric>
+                <Identifier>{{ loop.index }}</Identifier>
+                <Prefix>{{ route.get('to').split('/')[1] }}</Prefix>
+                <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
+                {%- if 'metric' in route %}
+                <Metric>{{ route.get('metric') }}</Metric>
+                {%- endif %}
             </Route>
         </Routes>
+        {%- endfor %}
+        {%- endif %}
     </Interface>
-</Interfaces>
-{% endif %}
+    {%- endfor %}
+    </Interfaces>
         <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
             <fAllowToGetHelp>true</fAllowToGetHelp>
@@ -109,11 +115,11 @@
                     <Order>1</Order>
                     <Path>cmd.exe /c net user Administrator /active:yes</Path>
                 </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
+                <!--RunSynchronousCommand wcm:action="add">
                     <Description>Passwd Admin Account</Description>
                     <Order>2</Order>
-                    <Path>cmd.exe /c net user Administrator WqBklwRwAYigfka7N8J12Gcz</Path>
-                </RunSynchronousCommand>
+                    <Path>cmd.exe /c net user Administrator {{ root_hash }}</Path>
+                </RunSynchronousCommand-->
                 <RunSynchronousCommand wcm:action="add">
                     <Description>Set winrm Service</Description>
                     <Order>3</Order>
@@ -135,8 +141,8 @@
                 <LogonCount>1</LogonCount>
                 <Username>Administrator</Username>
                 <Password>
-                    <PlainText>true</PlainText>
-                    <Value>WqBklwRwAYigfka7N8J12Gcz</Value>
+                    <PlainText>false</PlainText>
+                    <Value>{{ root_hash }}</Value>
                 </Password>
             </AutoLogon>
             <OOBE>
@@ -180,15 +186,19 @@
             </FirstLogonCommands>
             <UserAccounts>
                 <LocalAccounts>
+                    {%- for name,user in users.items() %}
                     <LocalAccount wcm:action="add">
+                        {%- if 'passwd' in user %}
                         <Password>
-                            <Value>{{ root_hash }}</Value>
-                            <PlainText>true</PlainText>
+                            <Value>{{ user.get('passwd') }}</Value>
+                            <PlainText>false</PlainText>
                         </Password>
-                        <DisplayName>Ansible</DisplayName>
-                        <Group>Administrators</Group>
-                        <Name>Ansible</Name>
+                        {%- endif %}
+                        <DisplayName>{{ user.get('gecos') }}</DisplayName>
+                        <Group>{{ user.get('primary_group') }}{%- if 'groups' in user -%};{{ ";".join(user.get('groups')) }}{%- endif %}</Group>
+                        <Name>{{ name }}</Name>
                     </LocalAccount>
+                    {%- endfor %}
                 </LocalAccounts>
             </UserAccounts>
         </component>
