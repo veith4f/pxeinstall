@@ -44,8 +44,6 @@ hosts:
         passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
         lock_passwd: false
         primary_group: Administratoren
-        groups:
-          - ansible
 
   - name: mylinuxserver
     config: cloudinit
