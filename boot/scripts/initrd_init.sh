@@ -242,6 +242,7 @@ end
 begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 NEXT=
+'''
 if [ "$config" == "cloudinit" ]; then # linux case
   if [ -z "$(efibootmgr | grep Linux)" ]; then
     mount $(ls ${install_to}* | sed '2q;d') /mnt
@@ -268,6 +269,8 @@ else
   log_msg "Setting boot order for config type '$config' is unsupported."
 
 fi
+'''
+NEXT=$(efibootmgr | grep -i HardDisk | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 if [ ! -z "$NEXT" ]; then
   efibootmgr --bootnext $NEXT
 fi
