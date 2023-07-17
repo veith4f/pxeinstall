@@ -71,35 +71,37 @@
             </UserAccounts>
         </component>
     <Interfaces>
-    {%- for name, interface in interfaces.items() %}
-    <Interface wcm:action="add">
-        <Ipv4Settings>
-            <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
-        </Ipv4Settings>
-        {%- if 'addresses' in interface %}
-        {%- for address in interface.get('addresses') %}
-        <UnicastIpAddresses>
-            <IpAddress wcm:action="add" wcm:keyValue="1">{{ address }}</IpAddress>
-        </UnicastIpAddresses>
+        {%- for name, interface in interfaces.items() %}
+        <Interface wcm:action="add">
+            <Ipv4Settings>
+                <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
+            </Ipv4Settings>
+            {%- if 'addresses' in interface %}
+            <UnicastIpAddresses>
+                {%- for address in interface.get('addresses') %}
+                <IpAddress wcm:action="add" wcm:keyValue="{{ loop.index }}">{{ address }}</IpAddress>
+                {%- endfor %}
+            </UnicastIpAddresses>
+            {%- endif %}
+            <Identifier>{{ name }}</Identifier>
+            {%- if 'routes' in interface %}
+            <Routes>
+                {%- for route in interface.get('routes') %}
+                <Route wcm:action="add">
+                    <Identifier>{{ loop.index }}</Identifier>
+                    <Prefix>{{ route.get('to').split('/')[1] }}</Prefix>
+                    <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
+                    {%- if 'metric' in route %}
+                    <Metric>{{ route.get('metric') }}</Metric>
+                    {%- else %}
+                    <Metric>20</Metric>
+                    {%- endif %}
+                </Route>
+                {%- endfor %}
+            </Routes>
+            {%- endif %}
+        </Interface>
         {%- endfor %}
-        {%- endif %}
-        <Identifier>{{ name }}</Identifier>
-        {%- if 'routes' in interface %}
-        {%- for route in interface.get('routes') %}
-        <Routes>
-            <Route wcm:action="add">
-                <Identifier>{{ loop.index }}</Identifier>
-                <Prefix>{{ route.get('to').split('/')[1] }}</Prefix>
-                <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
-                {%- if 'metric' in route %}
-                <Metric>{{ route.get('metric') }}</Metric>
-                {%- endif %}
-            </Route>
-        </Routes>
-        {%- endfor %}
-        {%- endif %}
-    </Interface>
-    {%- endfor %}
     </Interfaces>
         <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
