@@ -70,22 +70,23 @@
                 </AdministratorPassword>
             </UserAccounts>
         </component>
-    <Interfaces>
-        {%- for name, interface in interfaces.items() %}
-        <Interface wcm:action="add">
-            <Ipv4Settings>
+	<component name="Microsoft-Windows-TCPIP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	  <Interfaces>
+            {%- for name, interface in interfaces.items() %}
+            <Interface wcm:action="add">
+              <Ipv4Settings>
                 <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
-            </Ipv4Settings>
-            {%- if 'addresses' in interface %}
-            <UnicastIpAddresses>
+              </Ipv4Settings>
+              {%- if 'addresses' in interface %}
+              <UnicastIpAddresses>
                 {%- for address in interface.get('addresses') %}
                 <IpAddress wcm:action="add" wcm:keyValue="{{ loop.index }}">{{ address }}</IpAddress>
                 {%- endfor %}
-            </UnicastIpAddresses>
-            {%- endif %}
-            <Identifier>{{ name }}</Identifier>
-            {%- if 'routes' in interface %}
-            <Routes>
+              </UnicastIpAddresses>
+              {%- endif %}
+              <Identifier>{{ name }}</Identifier>
+              {%- if 'routes' in interface %}
+              <Routes>
                 {%- for route in interface.get('routes') %}
                 <Route wcm:action="add">
                     <Identifier>{{ loop.index }}</Identifier>
@@ -98,11 +99,12 @@
                     {%- endif %}
                 </Route>
                 {%- endfor %}
-            </Routes>
-            {%- endif %}
-        </Interface>
-        {%- endfor %}
-    </Interfaces>
+              </Routes>
+              {%- endif %}
+            </Interface>
+            {%- endfor %}
+	  </Interfaces>
+	</component>
         <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
             <fAllowToGetHelp>true</fAllowToGetHelp>
