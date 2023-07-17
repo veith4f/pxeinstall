@@ -57,102 +57,8 @@
             </DriverPaths>
         </component>
     </settings>
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-SecureStartup-FilterDriver" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <PreventDeviceEncryption>true</PreventDeviceEncryption>
-        </component>
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ComputerName>{{ name }}</ComputerName>
-            <UserAccounts>
-                <AdministratorPassword>
-                    <PlainText>false</PlainText>
-                    <Value>{{ root_hash }}</Value>
-                </AdministratorPassword>
-            </UserAccounts>
-        </component>
-	<component name="Microsoft-Windows-TCPIP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	  <Interfaces>
-            {%- for name, interface in interfaces.items() %}
-            <Interface wcm:action="add">
-              <Ipv4Settings>
-                <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
-              </Ipv4Settings>
-              {%- if 'addresses' in interface %}
-              <UnicastIpAddresses>
-                {%- for address in interface.get('addresses') %}
-                <IpAddress wcm:action="add" wcm:keyValue="{{ loop.index }}">{{ address }}</IpAddress>
-                {%- endfor %}
-              </UnicastIpAddresses>
-              {%- endif %}
-              <Identifier>{{ name }}</Identifier>
-              {%- if 'routes' in interface %}
-              <Routes>
-                {%- for route in interface.get('routes') %}
-                <Route wcm:action="add">
-                    <Identifier>{{ loop.index }}</Identifier>
-                    <Prefix>{{ route.get('to').split('/')[1] }}</Prefix>
-                    <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
-                    {%- if 'metric' in route %}
-                    <Metric>{{ route.get('metric') }}</Metric>
-                    {%- else %}
-                    <Metric>20</Metric>
-                    {%- endif %}
-                </Route>
-                {%- endfor %}
-              </Routes>
-              {%- endif %}
-            </Interface>
-            {%- endfor %}
-	  </Interfaces>
-	</component>
-        <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
-            <fAllowToGetHelp>true</fAllowToGetHelp>
-        </component>
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <InputLocale>0407:00000407</InputLocale>
-            <SystemLocale>de-DE</SystemLocale>
-            <UILanguage>de-DE</UILanguage>
-            <UILanguageFallback>de-DE</UILanguageFallback>
-            <UserLocale>de-DE</UserLocale>
-        </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Enable Admin Account</Description>
-                    <Order>1</Order>
-                    <Path>cmd.exe /c net user Administrator /active:yes</Path>
-                </RunSynchronousCommand>
-                <!--RunSynchronousCommand wcm:action="add">
-                    <Description>Passwd Admin Account</Description>
-                    <Order>2</Order>
-                    <Path>cmd.exe /c net user Administrator {{ root_hash }}</Path>
-                </RunSynchronousCommand-->
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Set winrm Service</Description>
-                    <Order>3</Order>
-                    <Path>cmd.exe /c sc config winrm start= auto</Path>
-                </RunSynchronousCommand>
-            </RunSynchronous>
-        </component>
-        <component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <DomainProfile_EnableFirewall>false</DomainProfile_EnableFirewall>
-            <PrivateProfile_EnableFirewall>false</PrivateProfile_EnableFirewall>
-            <PublicProfile_EnableFirewall>false</PublicProfile_EnableFirewall>
-        </component>
-    </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <TimeZone>W. Europe Standard Time</TimeZone>
-            <AutoLogon>
-                <Enabled>true</Enabled>
-                <LogonCount>1</LogonCount>
-                <Username>Administrator</Username>
-                <Password>
-                    <PlainText>false</PlainText>
-                    <Value>{{ root_hash }}</Value>
-                </Password>
-            </AutoLogon>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
                 <ProtectYourPC>3</ProtectYourPC>
@@ -193,6 +99,10 @@
                 </SynchronousCommand>
             </FirstLogonCommands>
             <UserAccounts>
+                <AdministratorPassword>
+                    <PlainText>false</PlainText>
+                    <Value>{{ root_hash }}</Value>
+                </AdministratorPassword>
                 <LocalAccounts>
                     {%- for name,user in users.items() %}
                     <LocalAccount wcm:action="add">
@@ -209,13 +119,100 @@
                     {%- endfor %}
                 </LocalAccounts>
             </UserAccounts>
+            <AutoLogon>
+                <Enabled>true</Enabled>
+                <LogonCount>1</LogonCount>
+                <Username>Administrator</Username>
+                <Password>
+                    <PlainText>false</PlainText>
+                    <Value>{{ root_hash }}</Value>
+                </Password>
+            </AutoLogon>
+            <ComputerName>{{ name }}</ComputerName>
+            <TimeZone>W. Europe Standard Time</TimeZone>
         </component>
-	<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <InputLocale>0407:00000407</InputLocale>
             <SystemLocale>de-DE</SystemLocale>
             <UILanguage>de-DE</UILanguage>
             <UILanguageFallback>de-DE</UILanguageFallback>
             <UserLocale>de-DE</UserLocale>
+        </component>
+    </settings>
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-SecureStartup-FilterDriver" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <PreventDeviceEncryption>true</PreventDeviceEncryption>
+        </component>
+        <component name="Microsoft-Windows-TCPIP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <Interfaces>
+            {%- for name, interface in interfaces.items() %}
+            <Interface wcm:action="add">
+              <Ipv4Settings>
+                <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
+              </Ipv4Settings>
+              {%- if 'addresses' in interface %}
+              <UnicastIpAddresses>
+                {%- for address in interface.get('addresses') %}
+                <IpAddress wcm:action="add" wcm:keyValue="{{ loop.index }}">{{ address }}</IpAddress>
+                {%- endfor %}
+              </UnicastIpAddresses>
+              {%- endif %}
+              <Identifier>{{ name }}</Identifier>
+              {%- if 'routes' in interface %}
+              <Routes>
+                {%- for route in interface.get('routes') %}
+                <Route wcm:action="add">
+                    <Identifier>{{ loop.index }}</Identifier>
+                    <Prefix>{{ route.get('to').split('/')[1] }}</Prefix>
+                    <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
+                    {%- if 'metric' in route %}
+                    <Metric>{{ route.get('metric') }}</Metric>
+                    {%- else %}
+                    <Metric>20</Metric>
+                    {%- endif %}
+                </Route>
+                {%- endfor %}
+              </Routes>
+              {%- endif %}
+            </Interface>
+            {%- endfor %}
+          </Interfaces>
+        </component>
+        <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
+            <fAllowToGetHelp>true</fAllowToGetHelp>
+        </component>
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>0407:00000407</InputLocale>
+            <SystemLocale>de-DE</SystemLocale>
+            <UILanguage>de-DE</UILanguage>
+            <UILanguageFallback>de-DE</UILanguageFallback>
+            <UserLocale>de-DE</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Enable Admin Account</Description>
+                    <Order>1</Order>
+                    <Path>cmd.exe /c net user Administrator /active:yes</Path>
+                </RunSynchronousCommand>
+                <!--RunSynchronousCommand wcm:action="add">
+                    <Description>Passwd Admin Account</Description>
+                    <Order>2</Order>
+                    <Path>cmd.exe /c net user Administrator {{ root_hash }}</Path>
+                    <WillReboot>Never</WillReboot>
+                </RunSynchronousCommand-->
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Set winrm Service</Description>
+                    <Order>3</Order>
+                    <Path>cmd.exe /c sc config winrm start=auto</Path>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+        <component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DomainProfile_EnableFirewall>false</DomainProfile_EnableFirewall>
+            <PrivateProfile_EnableFirewall>false</PrivateProfile_EnableFirewall>
+            <PublicProfile_EnableFirewall>false</PublicProfile_EnableFirewall>
         </component>
     </settings>
 </unattend>
