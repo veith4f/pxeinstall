@@ -136,7 +136,7 @@ OUT_GPG_KEY="/root/output/gpg.key"
 TMP_GRUB_EFI="$TMP/tmp.efi"
 TMP_GRUB_INITIAL="$TMP/grub-initial.cfg"
 OUT_GRUB_CFG="/root/output/grub.cfg"
-PASSPHRASE="--no-tty --pinentry-mode=loopback --passphrase irrelevant"
+PASSPHRASE="--no-tty --pinentry-mode=loopback --passphrase"
 
 cat <<EOF > $TMP_GRUB_INITIAL
 set default=0
