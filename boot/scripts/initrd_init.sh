@@ -272,7 +272,7 @@ fi
 '''
 BOOT=$(efibootmgr | grep -i HardDisk | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 if [ ! -z "$BOOT" ]; then
-  efibootmgr -b $BOOT
+  efibootmgr -o $BOOT
 fi
 umount /sys/firmware/efi/efivars
 end
