@@ -81,8 +81,8 @@
         <UnicastIpAddresses>
             <IpAddress wcm:action="add" wcm:keyValue="1">{{ address }}</IpAddress>
         </UnicastIpAddresses>
+        {%- endfor %}
         {%- endif %}
-        {% endfo %}
         <Identifier>{{ name }}</Identifier>
         {%- if 'routes' in interface %}
         {%- for route in interface.get('routes') %}
