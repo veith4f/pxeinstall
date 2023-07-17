@@ -76,9 +76,13 @@
         <Ipv4Settings>
             <DhcpEnabled>{%- if 'dhcp' in interface and interface.get('dhcp', false) -%} true {%- else -%} false {%- endif-%}</DhcpEnabled>
         </Ipv4Settings>
+        {%- if 'addresses' in interface %}
+        {%- for address in interface.get('addresses') %}
         <UnicastIpAddresses>
-            <IpAddress wcm:action="add" wcm:keyValue="1">{{ interfaces[0].addresses[0] }}</IpAddress>
+            <IpAddress wcm:action="add" wcm:keyValue="1">{{ address }}</IpAddress>
         </UnicastIpAddresses>
+        {%- endif %}
+        {% endfo %}
         <Identifier>{{ name }}</Identifier>
         {%- if 'routes' in interface %}
         {%- for route in interface.get('routes') %}
