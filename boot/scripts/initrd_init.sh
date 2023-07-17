@@ -220,7 +220,7 @@ if [[ "$config" == "cloudinit" ]]; then
   end
 
 elif [[ "$config" == "unattend" ]]; then
-  begin "Unattended installation: Writing unattend.xml to disk."
+  begin "Unattended installation. Writing unattend.xml to disk."
   mount $(ls ${install_to}* | sed '5q;d') /mnt/config
   if [ -f /mnt/config/unattend.xml.j2 ]; then
       hostconf_put unattend "$(cat /mnt/config/unattend.xml.j2)" > /mnt/config/unattend.xml
