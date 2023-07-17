@@ -54,6 +54,9 @@ menuentry "Debug Install of ee:4a:6a:a1:04:49" {
   initrd "initrd.img"
 }
 ```
+Use the following commands to sign the file
+gpg --import gpg.key gpg.pub # take not of the KEYID output by the command
+gpg --default-key $KEYID --detach-sign ee:4a:6a:a1:04:49
 
 
 gpg.cfg
