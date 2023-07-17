@@ -241,7 +241,7 @@ end
 
 begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-NEXT=
+BOOT=
 '''
 if [ "$config" == "cloudinit" ]; then # linux case
   if [ -z "$(efibootmgr | grep Linux)" ]; then
@@ -252,7 +252,7 @@ if [ "$config" == "cloudinit" ]; then # linux case
     fi
     umount /mnt
   fi
-  NEXT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
+  BOOT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 
 elif [ "$config" == "unattend" ]; then # windows case
   if [ -z "$(efibootmgr | grep WinInstall)" ]; then
@@ -263,16 +263,16 @@ elif [ "$config" == "unattend" ]; then # windows case
     fi
     umount /mnt
   fi
-  NEXT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
+  BOOT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 
 else
   log_msg "Setting boot order for config type '$config' is unsupported."
 
 fi
 '''
-NEXT=$(efibootmgr | grep -i HardDisk | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
-if [ ! -z "$NEXT" ]; then
-  efibootmgr --bootnext $NEXT
+BOOT=$(efibootmgr | grep -i HardDisk | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
+if [ ! -z "$BOOT" ]; then
+  efibootmgr -b $BOOT
 fi
 umount /sys/firmware/efi/efivars
 end
