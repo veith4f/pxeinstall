@@ -37,6 +37,25 @@ Example:
 insecure
 ```
 
+Client-specific grub configuration files
+-----------------------
+Additional grub configuration files to be used by specific clients can be created. These files must be named by a client's mac address, placed next to the other boot files and additionally signed with gpg.key from output directory.
+Example: filename "ee:4a:6a:a1:04:49"
+```
+menuentry "Debug Install of ee:4a:6a:a1:04:49" {
+  echo "Now loading kernel and ramdisk"
+  echo "Boot server: ${net_default_server}"
+  echo "Local interface: ${net_default_mac}"
+  echo
+  echo "Please be patient ..."
+  echo
+
+  linux vmlinuz hostconf=https://$some_ip_address client=${net_default_mac} insecure debug
+  initrd "initrd.img"
+}
+```
+
+
 gpg.cfg
 -----------------------
 Concerns parameters of an ephemeral gpg key that is used to sign kernel, ramdisk and grub.cfg. Specified name and email address will appear in signatures.
@@ -82,4 +101,6 @@ After successfully running docker-compose build and docker-compose up, output fo
 - intrd.img.sig: GPG signature file.
 - grub.cfg: Grub cfg file containing boot entries as specified in conf directory.
 - grub.cfg.sig: GPG signature file.
+- gpg.key: GPG Secret Key to create additional signatures for files used by netboot.efi.signed.
+- gpg.pub: GPG Public Key.
 

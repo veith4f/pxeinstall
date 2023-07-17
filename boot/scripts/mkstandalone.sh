@@ -131,7 +131,8 @@ cd /root
 ########################################################
 
 TMP=$(mktemp -d)
-TMP_GPG_KEY="$TMP/gpg.key"
+OUT_GPG_PUB="/root/output/gpg.pub"
+OUT_GPG_KEY="/root/output/gpg.key"
 TMP_GRUB_EFI="$TMP/tmp.efi"
 TMP_GRUB_INITIAL="$TMP/grub-initial.cfg"
 OUT_GRUB_CFG="/root/output/grub.cfg"
@@ -144,6 +145,7 @@ set timeout=3
 export default
 export timeout
 
+configfile "\${net_default_mac}"
 configfile "grub.cfg"
 
 echo Could not find boot configuration.
@@ -154,14 +156,15 @@ EOF
 
 gpg --batch $PASSPHRASE --gen-key $CONF_GPG_CFG 2>&1 > /dev/null
 GPG_KEY=$(gpg --list-signatures | sed '4q;d' | tr -d '[:space:]')
-gpg --export "$GPG_KEY" > "$TMP_GPG_KEY"
+gpg --export "$GPG_KEY" > "$OUT_GPG_PUB"
+gpg --export-secret-key "$GPG_KEY" > "$OUT_GPG_KEY"
 
 /usr/local/bin/grub-mkimage \
     --disable-shim-lock \
     --prefix "." \
     --directory="/usr/local/lib/grub/x86_64-efi" \
     --format="x86_64-efi" \
-    --pubkey="$TMP_GPG_KEY" \
+    --pubkey="$OUT_GPG_PUB" \
     --output="$TMP_GRUB_EFI" \
     --config="$TMP_GRUB_INITIAL" \
     configfile gcry_sha512 gcry_rsa echo normal linux \
