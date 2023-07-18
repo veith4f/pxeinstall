@@ -146,11 +146,11 @@
           <Order>6</Order>
         </SynchronousCommand>
         {%- for cmd in run_cmds %}
-        <RunSynchronousCommand wcm:action="add">
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>{{ cmd }}</CommandLine>
           <Description>{{ cmd }}</Description>
           <Order>{{ loop.index + 6 }}</Order>
-          <Path>{{ cmd }}</Path>
-        </RunSynchronousCommand>
+        </SynchronousCommand>
         {%- endfor %}
         <SynchronousCommand wcm:action="add">
           <CommandLine>shutdown -r -t 0</CommandLine>
@@ -236,7 +236,7 @@
         <RunSynchronousCommand wcm:action="add">
           <Description>Set winrm Service</Description>
           <Order>2</Order>
-          <Path>cmd.exe /c sc config winrm start=auto</Path>
+          <Path>cmd.exe /c sc config winrm start= auto</Path>
         </RunSynchronousCommand>
         <!--
         <RunSynchronousCommand wcm:action="add">
