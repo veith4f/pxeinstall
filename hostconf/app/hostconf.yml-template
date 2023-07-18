@@ -16,7 +16,7 @@ hosts:
       ansible:
         gecos: 'Ansible System User'
         passwd: ansible
-        primary_group: Administratoren
+        primary_group: Administrators
         groups:
           - ansible
 
@@ -39,7 +39,7 @@ hosts:
       ansible:
         gecos: 'Ansible System User'
         passwd: ansible
-        primary_group: Administratoren
+        primary_group: Administrators
 
   - name: mylinuxserver
     config: cloudinit
