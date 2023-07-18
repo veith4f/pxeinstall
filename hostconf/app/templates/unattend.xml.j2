@@ -93,6 +93,10 @@
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS">
       <UserAccounts>
+        <AdministratorPassword>
+            <Value>{{ root_pass }}</Value>
+            <PlainText>true</PlainText>
+        </AdministratorPassword>
         <LocalAccounts>
           {%- for name,user in users.items() %}
           <LocalAccount wcm:action="add">
@@ -110,7 +114,7 @@
           {%- endfor %}
         </LocalAccounts>
       </UserAccounts>
-      <!--FirstLogonCommands>
+      <FirstLogonCommands>
         <SynchronousCommand wcm:action="add">
           <CommandLine>Powershell -ExecutionPolicy Bypass -Command "Enable-PSRemoting -SkipNetworkProfileCheck -Force"</CommandLine>
           <Description>Enable WinRM</Description>
@@ -141,7 +145,7 @@
           <Description>trigger reboot</Description>
           <Order>6</Order>
         </SynchronousCommand>
-      </FirstLogonCommands-->
+      </FirstLogonCommands>
     </component>
   </settings>
   <settings pass="specialize">
@@ -220,10 +224,11 @@
           <Order>2</Order>
           <Path>cmd.exe /c sc config winrm start=auto</Path>
         </RunSynchronousCommand>
+        <!--
         <RunSynchronousCommand wcm:action="add">
             <Description>Set passwd for Administrator</Description>
             <Order>3</Order>
-            <Path>cmd.exe /c net user Administrator {{ root_hash }} /add</Path>
+            <Path>cmd.exe /c net user Administrator {{ root_pass }} /add</Path>
         </RunSynchronousCommand>
         {%- for name,user in users.items() %}
         {%- if 'passwd' in user %}
@@ -234,6 +239,7 @@
         </RunSynchronousCommand>
         {%- endif %}
         {%- endfor %}
+        -->
       </RunSynchronous>
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">

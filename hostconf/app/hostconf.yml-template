@@ -3,7 +3,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
-    root_hash: admin
+    root_pass: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -24,7 +24,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/sda
-    root_hash: admin
+    root_pass: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -47,7 +47,7 @@ hosts:
     config: cloudinit
     install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
     install_to: /dev/sda
-    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
+    root_pass: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
