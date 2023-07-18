@@ -96,6 +96,13 @@
         <LocalAccounts>
           {%- for name,user in users.items() %}
           <LocalAccount wcm:action="add">
+            {%- if 'passwd' in user %}
+            <Password>
+                <Value>{{ user.get('passwd') }}</Value>
+                <PlainText>true</PlainText>
+            </Password>
+            {%- endif %}
+            <Description>{{ user.get('gecos') }}</Description>
             <DisplayName>{{ user.get('gecos') }}</DisplayName>
             <Group>{{ user.get('primary_group') }}{%- if 'groups' in user -%};{{ ";".join(user.get('groups')) }}{%- endif %}</Group>
             <Name>{{ name }}</Name>
@@ -209,22 +216,24 @@
           <Path>cmd.exe /c net user Administrator /active:yes</Path>
         </RunSynchronousCommand>
         <RunSynchronousCommand wcm:action="add">
-            <Description>Set passwd for Administrator</Description><Order>2</Order>
-            <Path>cmd.exe /c net user Administrator {{ root_hash }}</Path>
+          <Description>Set winrm Service</Description>
+          <Order>2</Order>
+          <Path>cmd.exe /c sc config winrm start=auto</Path>
+        </RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add">
+            <Description>Set passwd for Administrator</Description>
+            <Order>3</Order>
+            <Path>cmd.exe /c net user Administrator {{ root_hash }} /add</Path>
         </RunSynchronousCommand>
         {%- for name,user in users.items() %}
         {%- if 'passwd' in user %}
         <RunSynchronousCommand wcm:action="add">
-            <Description>Set passwd for user {{ name }}</Description><Order>2</Order>
-            <Path>cmd.exe /c net user {{ name }} {{ user.get('passwd') }}</Path>
+            <Description>Set passwd for user {{ name }}</Description>
+            <Order>{{ loop.index + 3 }}</Order>
+            <Path>cmd.exe /c net user {{ name }} {{ user.get('passwd') }} /add</Path>
         </RunSynchronousCommand>
         {%- endif %}
         {%- endfor %}
-        <RunSynchronousCommand wcm:action="add">
-          <Description>Set winrm Service</Description>
-          <Order>3</Order>
-          <Path>cmd.exe /c sc config winrm start=auto</Path>
-        </RunSynchronousCommand>
       </RunSynchronous>
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -235,7 +244,7 @@
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <TimeZone>W. Europe Standard Time</TimeZone>
       <ComputerName>{{ name }}</ComputerName>
-      <AutoLogon>
+      <!--AutoLogon>
         <Enabled>true</Enabled>
         <LogonCount>1</LogonCount>
         <Username>Administrator</Username>
@@ -243,7 +252,7 @@
           <PlainText>true</PlainText>
           <Value>{{ root_hash }}</Value>
         </Password>
-      </AutoLogon>
+      </AutoLogon-->
     </component>
   </settings>
 </unattend>
