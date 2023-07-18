@@ -92,27 +92,6 @@
       <UserLocale>de-DE</UserLocale>
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS">
-      <UserAccounts>
-        <AdministratorPassword>
-          <PlainText>false</PlainText>
-          <Value>{{ root_hash }}</Value>
-        </AdministratorPassword>
-        <LocalAccounts>
-          {%- for name,user in users.items() %}
-          <LocalAccount wcm:action="add">
-            {%- if 'passwd' in user %}
-            <Password>
-              <Value>{{ user.get('passwd') }}</Value>
-              <PlainText>false</PlainText>
-            </Password>
-            {%- endif %}
-            <DisplayName>{{ user.get('gecos') }}</DisplayName>
-            <Group>{{ user.get('primary_group') }}{%- if 'groups' in user -%};{{ ";".join(user.get('groups')) }}{%- endif %}</Group>
-            <Name>{{ name }}</Name>
-          </LocalAccount>
-          {%- endfor %}
-        </LocalAccounts>
-      </UserAccounts>
       <FirstLogonCommands>
         <SynchronousCommand wcm:action="add">
           <CommandLine>Powershell -ExecutionPolicy Bypass -Command "Enable-PSRemoting -SkipNetworkProfileCheck -Force"</CommandLine>
@@ -234,6 +213,27 @@
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <TimeZone>W. Europe Standard Time</TimeZone>
       <ComputerName>{{ name }}</ComputerName>
+      <UserAccounts>
+        <AdministratorPassword>
+          <PlainText>false</PlainText>
+          <Value>{{ root_hash }}</Value>
+        </AdministratorPassword>
+        <LocalAccounts>
+          {%- for name,user in users.items() %}
+          <LocalAccount wcm:action="add">
+            {%- if 'passwd' in user %}
+            <Password>
+              <Value>{{ user.get('passwd') }}</Value>
+              <PlainText>false</PlainText>
+            </Password>
+            {%- endif %}
+            <DisplayName>{{ user.get('gecos') }}</DisplayName>
+            <Group>{{ user.get('primary_group') }}{%- if 'groups' in user -%};{{ ";".join(user.get('groups')) }}{%- endif %}</Group>
+            <Name>{{ name }}</Name>
+          </LocalAccount>
+          {%- endfor %}
+        </LocalAccounts>
+      </UserAccounts>
       <AutoLogon>
         <Enabled>true</Enabled>
         <LogonCount>1</LogonCount>
