@@ -134,7 +134,7 @@ end()
 ##############################################################
 ## Begin install routine
 
-begin "Loading essential drivers"
+begin "Loading drivers"
 [ -n "${netconsole}" ] && /sbin/modprobe netconsole netconsole="${netconsole}"
 load_modules
 modprobe af_packet
@@ -179,6 +179,7 @@ end
 
 begin "Flashing Cloud-Image to disk"
 dd if=/mnt/nfs/$image of=$install_to
+umount /mnt/nfs
 end
 
 begin "Fix GPT header and probe for partitions"
@@ -234,10 +235,6 @@ else
   log_msg "Configuration '$config' is not supported."
 
 fi
-
-begin "Unmounting nfs"
-umount /mnt/nfs
-end
 
 begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
