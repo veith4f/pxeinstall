@@ -3,7 +3,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
-    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
+    root_hash: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -15,7 +15,7 @@ hosts:
     users:
       ansible:
         gecos: 'Ansible System User'
-        passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
+        passwd: ansible
         primary_group: Administrators
         groups:
           - ansible
@@ -24,7 +24,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/sda
-    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
+    root_hash: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -40,7 +40,7 @@ hosts:
     users:
       ansible:
         gecos: 'Ansible System User'
-        passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
+        passwd: ansible
         primary_group: Administrators
 
   - name: mylinuxserver
