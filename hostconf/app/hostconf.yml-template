@@ -1,5 +1,5 @@
 hosts:
-  - name: mywindowsclient
+  - name: mywindowsserver
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
@@ -20,10 +20,10 @@ hosts:
         groups:
           - ansible
 
-  - name: mywindowsserver
+  - name: mywindowsclient
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
-    install_to: /dev/nvme0n1
+    install_to: /dev/sda
     root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
     nameserver: 192.168.234.254
