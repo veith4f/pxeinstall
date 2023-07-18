@@ -81,6 +81,7 @@
         <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
         <HideLocalAccountScreen>true</HideLocalAccountScreen>
         <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+        <NetworkLocation>Work</NetworkLocation>
       </OOBE>
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -89,6 +90,40 @@
       <UILanguage>de-DE</UILanguage>
       <UILanguageFallback>de-DE</UILanguageFallback>
       <UserLocale>de-DE</UserLocale>
+    </component>
+    <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS">
+      <FirstLogonCommands>
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>Powershell -ExecutionPolicy Bypass -Command "Enable-PSRemoting -SkipNetworkProfileCheck -Force"</CommandLine>
+          <Description>Enable WinRM</Description>
+          <Order>1</Order>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>schtasks /create /tn Ansible /tr "powershell.exe -Command \"Invoke-RestMethod -Uri http://192.168.234.229:5000/trigger-playbook -Method POST\"" /sc onstart /ru System</CommandLine>
+          <Description>create task</Description>
+          <Order>2</Order>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f</CommandLine>
+          <Description>disable autologon</Description>
+          <Order>3</Order>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f</CommandLine>
+          <Description>disable autologon password</Description>
+          <Order>4</Order>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>cmd.exe /c net user Administrator /active:no</CommandLine>
+          <Description>disable Administrator</Description>
+          <Order>5</Order>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <CommandLine>shutdown -r -t 0</CommandLine>
+          <Description>trigger reboot</Description>
+          <Order>6</Order>
+        </SynchronousCommand>
+      </FirstLogonCommands>
     </component>
   </settings>
   <settings pass="specialize">
@@ -208,38 +243,6 @@
           <Value>{{ root_hash }}</Value>
         </Password>
       </AutoLogon>
-      <FirstLogonCommands>
-        <SynchronousCommand wcm:action="add">
-          <CommandLine>Powershell -ExecutionPolicy Bypass -Command "Enable-PSRemoting -SkipNetworkProfileCheck -Force"</CommandLine>
-          <Description>Enable WinRM</Description>
-          <Order>1</Order>
-        </SynchronousCommand>
-        <SynchronousCommand wcm:action="add">
-          <CommandLine>schtasks /create /tn Ansible /tr "powershell.exe -Command \"Invoke-RestMethod -Uri http://192.168.234.229:5000/trigger-playbook -Method POST\"" /sc onstart /ru System</CommandLine>
-          <Description>create task</Description>
-          <Order>2</Order>
-        </SynchronousCommand>
-        <SynchronousCommand wcm:action="add">
-          <CommandLine>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f</CommandLine>
-          <Description>disable autologon</Description>
-          <Order>3</Order>
-        </SynchronousCommand>
-        <SynchronousCommand wcm:action="add">
-          <CommandLine>reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f</CommandLine>
-          <Description>disable autologon password</Description>
-          <Order>4</Order>
-        </SynchronousCommand>
-        <SynchronousCommand wcm:action="add">
-          <CommandLine>cmd.exe /c net user Administrator /active:no</CommandLine>
-          <Description>disable Administrator</Description>
-          <Order>5</Order>
-        </SynchronousCommand>
-        <SynchronousCommand wcm:action="add">
-          <CommandLine>shutdown -r -t 0</CommandLine>
-          <Description>trigger reboot</Description>
-          <Order>6</Order>
-        </SynchronousCommand>
-      </FirstLogonCommands>
     </component>
   </settings>
 </unattend>
