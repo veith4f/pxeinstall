@@ -250,15 +250,15 @@
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <TimeZone>W. Europe Standard Time</TimeZone>
       <ComputerName>{{ name }}</ComputerName>
-      <!--AutoLogon>
+      <AutoLogon>
         <Enabled>true</Enabled>
         <LogonCount>1</LogonCount>
         <Username>Administrator</Username>
         <Password>
           <PlainText>true</PlainText>
-          <Value>{{ root_hash }}</Value>
+          <Value>{{ root_pass }}</Value>
         </Password>
-      </AutoLogon-->
+      </AutoLogon>
     </component>
   </settings>
 </unattend>
