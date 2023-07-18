@@ -3,7 +3,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
-    root_passwd: admin
+    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -24,17 +24,19 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
-    root_passwd: admin
+    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
       Ethernet:
-        mac: "ee:4a:6a:a1:04:47"
+        mac: "ee:4a:6a:a1:04:49"
         addresses:
           - 192.168.234.56/24
         routes:
           - to: 0.0.0.0/0
             via: 192.168.234.254
+    groups:
+      - ansible
     users:
       ansible:
         gecos: 'Ansible System User'
@@ -45,12 +47,12 @@ hosts:
     config: cloudinit
     install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
     install_to: /dev/sda
-    root_passwd: admin
+    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
       eth0:
-        mac: "ee:4a:6a:a1:04:49"
+        mac: "ee:4a:6a:a1:04:47"
         addresses:
           - 192.168.234.249/24
         routes:

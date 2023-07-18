@@ -93,19 +93,9 @@
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS">
       <UserAccounts>
-        <AdministratorPassword>
-            <Value>{{ root_passwd }}</Value>
-            <PlainText>true</PlainText>
-        </AdministratorPassword>
         <LocalAccounts>
           {%- for name,user in users.items() %}
           <LocalAccount wcm:action="add">
-            {%- if 'passwd' in user %}
-            <Password>
-              <Value>{{ user.get('passwd') }}</Value>
-              <PlainText>true</PlainText>
-            </Password>
-            {%- endif %}
             <DisplayName>{{ user.get('gecos') }}</DisplayName>
             <Group>{{ user.get('primary_group') }}{%- if 'groups' in user -%};{{ ";".join(user.get('groups')) }}{%- endif %}</Group>
             <Name>{{ name }}</Name>
@@ -218,10 +208,18 @@
           <Order>1</Order>
           <Path>cmd.exe /c net user Administrator /active:yes</Path>
         </RunSynchronousCommand>
-        <!--RunSynchronousCommand wcm:action="add">
+        <RunSynchronousCommand wcm:action="add">
             <Description>Passwd Admin Account</Description><Order>2</Order>
-            <Path>cmd.exe /c net user Administrator {{ root_passwd }}</Path>
-        </RunSynchronousCommand-->
+            <Path>cmd.exe /c net user Administrator {{ root_hash }}</Path>
+        </RunSynchronousCommand>
+        {%- for name,user in users.items() %}
+        {%- if 'passwd' in user %}
+        <RunSynchronousCommand wcm:action="add">
+            <Description>Passwd Admin Account</Description><Order>2</Order>
+            <Path>cmd.exe /c net user {{ name }} {{ user.get('passwd') }}</Path>
+        </RunSynchronousCommand>
+        {%- endif %}
+        {%- endfor %}
         <RunSynchronousCommand wcm:action="add">
           <Description>Set winrm Service</Description>
           <Order>3</Order>
@@ -243,7 +241,7 @@
         <Username>Administrator</Username>
         <Password>
           <PlainText>true</PlainText>
-          <Value>{{ root_passwd }}</Value>
+          <Value>{{ root_hash }}</Value>
         </Password>
       </AutoLogon>
     </component>

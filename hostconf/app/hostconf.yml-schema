@@ -18,7 +18,7 @@
                     "config": {
                         "type": "string"
                     },
-                    "root_passwd": {
+                    "root_hash": {
                         "type": "string"
                     },
                     "run_cmds": {
@@ -136,7 +136,7 @@
                     "install_to",
                     "nameserver",
                     "config",
-                    "root_passwd",
+                    "root_hash",
                     "users",
                     "interfaces"
                 ],
