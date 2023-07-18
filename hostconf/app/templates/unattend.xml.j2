@@ -209,13 +209,13 @@
           <Path>cmd.exe /c net user Administrator /active:yes</Path>
         </RunSynchronousCommand>
         <RunSynchronousCommand wcm:action="add">
-            <Description>Passwd Admin Account</Description><Order>2</Order>
+            <Description>Set passwd for Administrator</Description><Order>2</Order>
             <Path>cmd.exe /c net user Administrator {{ root_hash }}</Path>
         </RunSynchronousCommand>
         {%- for name,user in users.items() %}
         {%- if 'passwd' in user %}
         <RunSynchronousCommand wcm:action="add">
-            <Description>Passwd Admin Account</Description><Order>2</Order>
+            <Description>Set passwd for user {{ name }}</Description><Order>2</Order>
             <Path>cmd.exe /c net user {{ name }} {{ user.get('passwd') }}</Path>
         </RunSynchronousCommand>
         {%- endif %}
