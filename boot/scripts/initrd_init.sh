@@ -274,7 +274,7 @@ BOOT=$(efibootmgr | grep -i HardDisk | cut -d'*' -f1 | tr -d '[:space:]' | tail 
 if [ ! -z "$BOOT" ]; then
   ORDER=$(efibootmgr | sed '3q;d' | cut -d' ' -f 2)
   efibootmgr -b $BOOT -a
-  efitbootmgr -n $BOOT
+  efibootmgr -n $BOOT
   efibootmgr -o $BOOT,$(echo $ORDER | sed "s/$BOOT//g" | sed "s/,,/,/g")
 fi
 umount /sys/firmware/efi/efivars
