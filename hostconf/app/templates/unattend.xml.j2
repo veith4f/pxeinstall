@@ -93,6 +93,10 @@
     </component>
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS">
       <UserAccounts>
+        <AdministratorPassword>
+          <PlainText>false</PlainText>
+          <Value>{{ root_hash }}</Value>
+        </AdministratorPassword>
         <LocalAccounts>
           {%- for name,user in users.items() %}
           <LocalAccount wcm:action="add">
@@ -230,12 +234,6 @@
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <TimeZone>W. Europe Standard Time</TimeZone>
       <ComputerName>{{ name }}</ComputerName>
-      <UserAccounts>
-        <AdministratorPassword>
-          <PlainText>false</PlainText>
-          <Value>{{ root_hash }}</Value>
-        </AdministratorPassword>
-      </UserAccounts>
       <AutoLogon>
         <Enabled>true</Enabled>
         <LogonCount>1</LogonCount>
