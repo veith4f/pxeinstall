@@ -46,11 +46,8 @@ users:
       - {{ key }}
     {%- endfor %}
     {%- endif %}
-    {%- if 'lock_passwd' in user %}
-    lock_passwd: {{ user.get('lock_passwd') }}
-    {%- endif %}
     {%- if 'passwd' in user %}
-    passwd: {{ user.get('passwd') }}
+    lock_passwd: false
     {%- endif %}
 {%- endfor %}
 
@@ -63,5 +60,11 @@ chpasswd:
   expire: false
   list:
     - root:{{ root_hash }}
+  {%- for name,user in users.items() %}
+  {%- if 'passwd' in user %}
+    - {{ name }}:{{ user.get('passwd') }}
+  {%- endif %}
+  }
+  {%- %}
 {%- endif %}
 

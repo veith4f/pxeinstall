@@ -3,7 +3,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
-    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
+    root_pw: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -15,8 +15,7 @@ hosts:
     users:
       ansible:
         gecos: 'Ansible System User'
-        passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
-        lock_passwd: false
+        passwd: ansible
         primary_group: Administratoren
         groups:
           - ansible
@@ -25,7 +24,7 @@ hosts:
     config: unattend
     install: "nfs://192.168.234.233:/srv/nfs/Windows10UEFI.raw"
     install_to: /dev/nvme0n1
-    root_hash: 209c6174da490caeb422f3fa5a7ae634 # admin
+    root_pw: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -36,20 +35,17 @@ hosts:
         routes:
           - to: 0.0.0.0/0
             via: 192.168.234.254
-    groups:
-      - ansible
     users:
       ansible:
         gecos: 'Ansible System User'
-        passwd: a0040e1712ba90f0eeffcb74cc184ac6 # ansible
-        lock_passwd: false
+        passwd: ansible
         primary_group: Administratoren
 
   - name: mylinuxserver
     config: cloudinit
     install: "nfs://192.168.234.233:/srv/nfs/Debian12UEFI.raw"
     install_to: /dev/sda
-    root_hash: $6$sEmXOpZIRo$AmpDOYOQmUUPmGyESlpzcG2vLoHHjr1chD9AXKwz.F6h82Jh3HiUGt4kojnOIyBPlWWI8KM3wvlTqmzhZNyvo.
+    root_pw: admin
     run_cmds: []
     nameserver: 192.168.234.254
     interfaces:
@@ -69,10 +65,9 @@ hosts:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCunNO9B/M9wsydz/jUbm3nFmZHu85SsFkwvX+xg6heF93ssBgjYpKtJfkpPSZwX8O5Jdosn9NhjgxZ0AoG7sIjOLkbvrHUPHD/qhmWhR3/EhlGaZOVwLZi1rYZbkhIY9Skbbto+OPZw/0ZNcQ5hPubx+Fni4wFUM2dAd6Qcph9532untX1VvHlhniq4TMJ8omO3vLFd2WbpjR4lbOXR9YjbenNFuF7OVOCeFfm0ibXyw+H5GxzxQ8fmCSt1zbCjYqFdnBnNtqGlDiKTABGD8Goo4kYnxlUnIbRBtO2vdQJEi22h7OdqlagItW0UricIipgp9/WWhTMNybvM2i6YtqEPT0CCtaOS14kzXZsIXzKEPkEHJSZZ0NHXzW4OxfkrShv8R45WuKxwP9KcRL6QXkwSFWwy3Sa/67Za+i0RG0mlnw6+dY3Lq3uf+yy2i5lxNjpujcaPzP/UkBKiY6X7pXQo5sFCWbB2lU6X5vb+TAQXMd7pjzBQHXBdLDY45/540jNglX5T3Wt+O0K+lpBRtDMTEK3HHfU8X7VOLlLszN6tRnEU+qHhehBRp4XnFNnEBtI7jLJfDM6qUH4/MLkhoLL1XNnv6GF8xzOPnYbQV6udNJ2gclHi2P5LSzY7y5/d+TKlFlYOzaD3J+zJo1dswrl80Jp5iloGHon4Bp+bWpGXw==
         sudo: yes
         uid: 1001
-        passwd: $6$rounds=4096$pZ1MeqCqNWBl7T5u$x7LMB7PJAqvQfqL8yv/p1Ma9OQnB7xG2VfzVhQVQvyhnNz8kYmXxOUb5r5fW.xaUTqoF2hWaCoZopEh/p/KM90 # ansible
+        passwd: ansible
         shell: /bin/bash
         primary_group: ansible
-        lock_passwd: yes
         groups:
           - wheel
           - adm
