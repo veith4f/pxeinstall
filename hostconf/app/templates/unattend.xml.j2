@@ -128,9 +128,6 @@
               </UnicastIpAddresses>
               {%- endif %}
               <Identifier>{{ name }}</Identifier>
-              <DNSServerSearchOrder>
-                <IpAddress wcm:action="add" wcm:keyValue="1">{{ nameserver }}</IpAddress>
-              </DNSServerSearchOrder>
               {%- if 'routes' in interface %}
               <Routes>
                 {%- for route in interface.get('routes') %}
