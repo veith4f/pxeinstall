@@ -148,6 +148,18 @@
             {%- endfor %}
           </Interfaces>
         </component>
+        <component name="Microsoft-Windows-DNS-Client" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Interfaces>
+              {%- for name, interface in interfaces.items() %}
+                <Interface wcm:action="add">
+                    <DNSServerSearchOrder>
+                        <IpAddress wcm:action="add" wcm:keyValue="1">{{ nameserver }}</IpAddress>
+                    </DNSServerSearchOrder>
+                    <Identifier>{{ name }}</Identifier>
+                </Interface>
+              {%- endfor %}
+            </Interfaces>
+        </component>
         <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
             <fAllowToGetHelp>true</fAllowToGetHelp>
@@ -184,10 +196,10 @@
             <PrivateProfile_EnableFirewall>false</PrivateProfile_EnableFirewall>
             <PublicProfile_EnableFirewall>false</PublicProfile_EnableFirewall>
         </component>
-	<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	  <TimeZone>W. Europe Standard Time</TimeZone>
-          <ComputerName>{{ name }}</ComputerName>
-	  <FirstLogonCommands>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <TimeZone>W. Europe Standard Time</TimeZone>
+            <ComputerName>{{ name }}</ComputerName>
+            <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>Powershell -ExecutionPolicy Bypass -Command "Enable-PSRemoting -SkipNetworkProfileCheck -Force"</CommandLine>
                     <Description>Enable WinRM</Description>
@@ -219,7 +231,7 @@
                     <Order>6</Order>
                 </SynchronousCommand>
           </FirstLogonCommands>
-	  <UserAccounts>
+          <UserAccounts>
             <AdministratorPassword>
               <PlainText>false</PlainText>
               <Value>{{ root_hash }}</Value>
@@ -240,7 +252,7 @@
               {%- endfor %}
             </LocalAccounts>
           </UserAccounts>
-	  <AutoLogon>
+          <AutoLogon>
             <Enabled>true</Enabled>
             <LogonCount>1</LogonCount>
             <Username>Administrator</Username>
@@ -248,8 +260,8 @@
               <PlainText>false</PlainText>
               <Value>{{ root_hash }}</Value>
             </Password>
-            </AutoLogon>
-	</component>
-    </settings>
+          </AutoLogon>
+    </component>
+  </settings>
 </unattend>
 
