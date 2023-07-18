@@ -107,8 +107,6 @@
                     <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
                     {%- if 'metric' in route %}
                     <Metric>{{ route.get('metric') }}</Metric>
-                    {%- else %}
-                    <Metric>20</Metric>
                     {%- endif %}
                 </Route>
                 {%- endfor %}
