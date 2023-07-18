@@ -66,36 +66,6 @@
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
             </OOBE>
-            <UserAccounts>
-                <AdministratorPassword>
-                    <PlainText>false</PlainText>
-                    <Value>{{ root_hash }}</Value>
-                </AdministratorPassword>
-                <LocalAccounts>
-                    {%- for name,user in users.items() %}
-                    <LocalAccount wcm:action="add">
-                        {%- if 'passwd' in user %}
-                        <Password>
-                            <Value>{{ user.get('passwd') }}</Value>
-                            <PlainText>false</PlainText>
-                        </Password>
-                        {%- endif %}
-                        <DisplayName>{{ user.get('gecos') }}</DisplayName>
-                        <Group>{{ user.get('primary_group') }}{%- if 'groups' in user -%};{{ ";".join(user.get('groups')) }}{%- endif %}</Group>
-                        <Name>{{ name }}</Name>
-                    </LocalAccount>
-                    {%- endfor %}
-                </LocalAccounts>
-            </UserAccounts>
-            <AutoLogon>
-                <Enabled>true</Enabled>
-                <LogonCount>1</LogonCount>
-                <Username>Administrator</Username>
-                <Password>
-                    <PlainText>false</PlainText>
-                    <Value>{{ root_hash }}</Value>
-                </Password>
-            </AutoLogon>
         </component>
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <InputLocale>0407:00000407</InputLocale>
