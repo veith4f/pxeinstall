@@ -132,7 +132,7 @@
               <Routes>
                 {%- for route in interface.get('routes') %}
                 <Route wcm:action="add">
-                    <Identifier>{{ loop.index }}</Identifier>
+                    <Identifier>{{ loop.index - 1 }}</Identifier>
                     <Prefix>{{ route.get('to') }}</Prefix>
                     <NextHopAddress>{{ route.get('via') }}</NextHopAddress>
                     {%- if 'metric' in route %}
