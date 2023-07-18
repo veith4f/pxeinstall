@@ -131,11 +131,6 @@
               </UnicastIpAddresses>
               {%- endif %}
               <Identifier>{{ name }}</Identifier>
-              {%- if nameserver is not None %}
-              <DNSServerSearchOrder>
-                <IpAddress wcm:action="add" wcm:keyValue="1">{{ nameserver }}</IpAddress>
-              </DNSServerSearchOrder>
-              {%- endif %}
               {%- if 'routes' in interface %}
               <Routes>
                 {%- for route in interface.get('routes') %}
@@ -156,6 +151,13 @@
             {%- endfor %}
           </Interfaces>
         </component>
+        {%- if nameserver is not none %}
+        <component name="Microsoft-Windows-DNS-Client" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <DNSServerSearchOrder>
+            <IpAddress wcm:action="add" wcm:keyValue="1">{{ nameserver }}</IpAddress>
+          </DNSServerSearchOrder>
+        </component>
+        {%- endif %}
         <component name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
             <fAllowToGetHelp>true</fAllowToGetHelp>
