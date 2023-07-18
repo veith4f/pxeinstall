@@ -145,10 +145,17 @@
           <Description>disable Administrator</Description>
           <Order>6</Order>
         </SynchronousCommand>
+        {%- for cmd in run_cmds %}
+        <RunSynchronousCommand wcm:action="add">
+          <Description>{{ cmd }}</Description>
+          <Order>{{ loop.index + 6 }}</Order>
+          <Path>{{ cmd }}</Path>
+        </RunSynchronousCommand>
+        {%- endfor %}
         <SynchronousCommand wcm:action="add">
           <CommandLine>shutdown -r -t 0</CommandLine>
           <Description>trigger reboot</Description>
-          <Order>7</Order>
+          <Order>{{ 7 + run_cmds|length }}</Order>
         </SynchronousCommand>
       </FirstLogonCommands>
     </component>
@@ -194,6 +201,7 @@
         {%- endfor %}
       </Interfaces>
     </component>
+    {%- if nameserver is defined %}
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-DNS-Client" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <Interfaces>
         {%- for name, interface in interfaces.items() %}
@@ -206,6 +214,7 @@
         {%- endfor %}
       </Interfaces>
     </component>
+    {%- endif %}
     <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-RemoteAssistance-Exe" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <CreateEncryptedOnlyTickets>true</CreateEncryptedOnlyTickets>
       <fAllowToGetHelp>true</fAllowToGetHelp>

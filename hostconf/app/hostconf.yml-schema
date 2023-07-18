@@ -134,7 +134,6 @@
                     "name",
                     "install",
                     "install_to",
-                    "nameserver",
                     "config",
                     "root_pass",
                     "users",

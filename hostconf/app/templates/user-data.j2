@@ -1,7 +1,13 @@
 #cloud-config
 fqdn: {{ name }}
 manage_etc_hosts: false
+{%- if nameserver is defined %}
+manage_resolv_conf: true
+resolv_conf:
+  nameservers: ["{{ nameserver }}"]
+{%- else %}
 manage_resolv_conf: false
+{%- endif %}
 
 runcmd:
 {%- for cmd in run_cmds %}

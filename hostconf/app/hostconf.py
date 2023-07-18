@@ -40,6 +40,10 @@ def get_host_config(client):
     for host in config.get('hosts'):
         for ifname, interface in host.get('interfaces').items():
             if interface.get('mac') == client:
+                if 'run_cmds' not in host:
+                    host['run_cmds'] = []
+                if 'users' not in host:
+                    host['users'] = []
                 return host
     raise HTTPException(status_code=404, detail="Host not found: %s" % client)
 
