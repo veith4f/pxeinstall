@@ -9,8 +9,11 @@ cert:
 
 .PHONY: default
 default:
-	docker-compose build
-	docker-compose up
+	@[ ! -z "$(shell docker images | grep hostconf-hostconf)" ] || \
+		(cp docker-compose.override.yml-template docker-compose.override.yml \
+		&& docker-compose build \
+		&& rm docker-compose.override.yml)
+	@docker-compose up
 
 .PHONY: start
 start:

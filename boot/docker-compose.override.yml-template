@@ -1,6 +1,6 @@
 services:
   buildenv:
-    image: boot-buildenv
+    build: buildenv
     volumes:
         - ./output:/root/output:rw
         - ./scripts:/root/scripts:ro

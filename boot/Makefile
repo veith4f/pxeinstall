@@ -15,7 +15,11 @@ config:
 	@[ -f "conf/gpg.cfg" ] || cp conf/gpg.cfg-template conf/gpg.cfg
 	@[ -f "conf/grub.cfg" ] || cp conf/grub.cfg-template conf/grub.cfg
 
+
 .PHONY: default
 default:
-	@docker-compose build
+	@[ ! -z "$(shell docker images | grep boot-buildenv)" ] || \
+		(cp docker-compose.override.yml-template docker-compose.override.yml \
+		&& docker-compose build \
+		&& rm docker-compose.override.yml)
 	@docker-compose up

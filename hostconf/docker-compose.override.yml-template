@@ -1,6 +1,8 @@
 services:
   hostconf:
-    image: hostconf-hostconf
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     volumes:
         - ./app:/home/hostconf/app:ro
         - ./conf:/home/hostconf/conf:ro
