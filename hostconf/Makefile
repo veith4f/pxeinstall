@@ -7,6 +7,13 @@ cert:
 			-new -nodes -x509 -days 3650 -keyout cert/key.pem -out cert/cert.pem \
 			-subj "/CN=hostconf.domain.tld/" || true
 
+.PHONY: build
+build:
+	@cp docker-compose.override.yml-template docker-compose.override.yml
+	@docker-compose build
+	@rm docker-compose.override.yml
+
+
 .PHONY: default
 default:
 	@[ ! -z "$(shell docker images | grep hostconf-hostconf)" ] || \

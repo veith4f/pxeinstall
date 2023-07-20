@@ -47,15 +47,11 @@ Application will listen on port 443 and expose following endpoints which are con
 Usage
 =======================
 ```
-docker-compose build
+make build
 ``` 
 Build.
 ```
-docker-compose up 
+make
 ``` 
 Run.
-```
-make
-```
-Build and Run in sequence. Rebuild only happens upon change to any of the files in docker directory so this is usually just as fast as Run.
 

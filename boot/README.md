@@ -72,18 +72,13 @@ In order to create netboot.efi.signed, Secure Boot keys are required. Copy db.ke
 Usage
 =======================
 ```
-docker-compose build
+make build
 ``` 
 Creates build environment. Will take a while.
 ```
-docker-compose up 
-``` 
-Creates custom signed ramdisk, kernel and grub image in output directory. Scripts in 'scripts' directory are run by docker-compose up. Changes to these only require re-running this command.
-
-```
 make
-```
-For convenience, there is also a GNU Makefile that executes both commands in sequence. Lengthy rebuild of build environment is only triggered if there are changes to buildenv/Docker, so this is usually just as fast as running docker-compose up.
+``` 
+Creates custom signed ramdisk, kernel and grub image in output directory. Scripts in 'scripts' directory are run by docker-compose up. Changes to these require re-running make build
 ```
 make config
 ```
