@@ -78,7 +78,7 @@ Creates build environment. Will take a while.
 ```
 make
 ``` 
-Creates custom signed ramdisk, kernel and grub image in output directory. Scripts in 'scripts' directory are run by docker-compose up. Changes to these require re-running make build
+Creates custom signed ramdisk, kernel and grub image in output directory. Scripts in 'scripts' directory are run by make. Changes to these require re-running make build
 ```
 make config
 ```
@@ -91,7 +91,7 @@ Generate sbkeys/db.key and sbkeys/db.cert. This is meant for testing.
 
 Output
 =======================
-After successfully running docker-compose build and docker-compose up, output folder will contain following files, all of which have to be placed in server directory (usually /srv/tftp) of tftp server configured as next-server in dhcp.
+After successfully running make build and make, output folder will contain following files, all of which have to be placed in server directory (usually /srv/tftp) of tftp server configured as next-server in dhcp.
 - netboot.efi.signed: Grub efi boot image signed with supplied secure boot keys.
 - vmlinuz: Debian 12 Linux kernel signed with gpg key, public side of which has been compiled into netboot.efi.signed. Private side already deleted.
 - vmlinuz.sig: GPG signature file.
