@@ -18,13 +18,13 @@ config:
 .PHONY: build
 build:
 	@cp docker-compose.override.yml-template docker-compose.override.yml
-	@docker-compose build
+	@docker compose build
 	@rm docker-compose.override.yml
 
 .PHONY: default
 default:
 	@[ ! -z "$(shell docker images | grep boot-buildenv)" ] || \
 		(cp docker-compose.override.yml-template docker-compose.override.yml \
-		&& docker-compose build \
+		&& docker compose build \
 		&& rm docker-compose.override.yml)
-	@docker-compose up
+	@docker compose up
