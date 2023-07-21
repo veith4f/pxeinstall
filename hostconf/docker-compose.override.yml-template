@@ -1,5 +1,6 @@
 services:
   hostconf:
+    image: sopra/ipl/pxe-hostconf:1.0
     build:
       context: .
       dockerfile: docker/Dockerfile

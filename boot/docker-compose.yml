@@ -1,6 +1,6 @@
 services:
   buildenv:
-    image: boot-buildenv
+    image: sopra/ipl/pxe-boot:1.0
     volumes:
         - ./output:/root/output:rw
         - ./certs:/etc/ssl/certs:rw

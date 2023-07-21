@@ -1,6 +1,6 @@
 services:
   hostconf:
-    image: hostconf-hostconf
+    image: sopra/ipl/pxe-hostconf:1.0
     volumes:
         - ./app:/home/hostconf/app:ro
         - ./conf:/home/hostconf/conf:ro

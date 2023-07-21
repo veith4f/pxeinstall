@@ -1,5 +1,6 @@
 services:
   buildenv:
+    image: sopra/ipl/pxe-boot:1.0
     build: buildenv
     volumes:
         - ./output:/root/output:rw
