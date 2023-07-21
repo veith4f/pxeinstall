@@ -11,10 +11,7 @@ Dependencies
 
 Certificates
 =======================
-Put any pre-existing key (key.pem) and certificate (cert.pem) into cert folder or generate with the following command. The generated certificate will have CN=hostconf.domain.tld.
-```
-make cert
-```
+Put any pre-existing key (key.pem) and certificate (cert.pem) into cert folder. If no certificate files exist, hostconf will generate and use a self-signed certificate.
 
 
 Configuration

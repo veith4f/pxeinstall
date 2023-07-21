@@ -1,1 +1,1 @@
-Put web server certificate (cert.pem) and key (cert.key) into this directory. You may enter 'make cert' to generate self-signed files. The command will only generate new files if either is missing.
+Put any pre-existing key (key.pem) and certificate (cert.pem) into cert folder. If no certificate files exist, hostconf will generate and use a self-signed certificate.
