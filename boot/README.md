@@ -69,6 +69,11 @@ Secure Boot Keys
 In order to create netboot.efi.signed, Secure Boot keys are required. Copy db.key and db.crt into sbkeys directory of this project.
 
 
+Certificates
+=======================
+If 'hostconf' parameter uses an https URL scheme, curl will need proper ca-certificates to ensure identity of host running web service. Default 'ca-certificates.crt' from directory 'certs' will be used. Any additional CA certificate files may be added next to ca-certificates.crt or the file may be overwritten.
+
+
 Usage
 =======================
 ```

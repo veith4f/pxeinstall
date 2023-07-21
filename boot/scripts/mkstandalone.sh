@@ -112,8 +112,6 @@ cp /usr/lib/modules/$uname/kernel/fs/efivarfs/efivarfs.ko initrd/usr/lib/modules
 # copy hd drivers
 cp -a /usr/lib/modules/$uname/kernel/drivers/ata initrd/usr/lib/modules/$uname/kernel/drivers
 cp -a /usr/lib/modules/$uname/kernel/drivers/scsi initrd/usr/lib/modules/$uname/kernel/drivers
-# copy ssl stuff
-cp -a /etc/ssl initrd/
 # fix log_begin_msg function
 sed -i 's/"Begin: %s ... "/"Begin: %s ... \\\\n"/g' initrd/scripts/functions
 # add new std log function log_msg

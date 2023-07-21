@@ -3,6 +3,7 @@ services:
     image: boot-buildenv
     volumes:
         - ./output:/root/output:rw
+        - ./certs:/etc/ssl/certs:rw
         - ./scripts:/root/scripts:ro
         - ./sbkeys:/root/sbkeys:ro
         - ./conf:/root/conf:ro
