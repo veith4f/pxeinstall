@@ -92,8 +92,8 @@ hostconf_get()
       break
     fi
     if [ "$debug" == "y" ]; then
-      read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN
-      [ "r" == "$IN" ] && reboot -f
+	read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN
+	[ "r" == "$IN" ] && reboot -f
     else
       log_msg "Could not connect to hostconf. Will reboot." && sleep 10 && reboot -f
     fi
@@ -107,8 +107,8 @@ hostconf_put()
       break
     fi
     if [ "$debug" == "y" ]; then
-      read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN
-      [ "r" == "$IN" ] && reboot -f
+	read -p "Could not connect to hostconf. Press enter to try again or r to reboot: " IN
+	[ "r" == "$IN" ] && reboot -f
     else
       log_msg "Could not connect to hostconf. Will reboot." && sleep 10 && reboot -f
     fi

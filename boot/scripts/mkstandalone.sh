@@ -113,7 +113,10 @@ cp /usr/lib/modules/$uname/kernel/fs/efivarfs/efivarfs.ko initrd/usr/lib/modules
 cp -a /usr/lib/modules/$uname/kernel/drivers/ata initrd/usr/lib/modules/$uname/kernel/drivers
 cp -a /usr/lib/modules/$uname/kernel/drivers/scsi initrd/usr/lib/modules/$uname/kernel/drivers
 # copy ssl certs
-cp -a /certs initrd/etc/ssl/
+mkdir -p initrd/etc/ssl/certs
+cp /certs/* initrd/etc/ssl/certs
+chown -R root:root initrd/etc/ssl/certs
+chmod 400 initrd/etc/ssl/certs/*
 # fix log_begin_msg function
 sed -i 's/"Begin: %s ... "/"Begin: %s ... \\\\n"/g' initrd/scripts/functions
 # add new std log function log_msg
