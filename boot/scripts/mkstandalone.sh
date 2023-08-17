@@ -55,6 +55,7 @@ cp /usr/bin/flock initrd/usr/bin
 cp /usr/bin/efibootmgr initrd/usr/bin
 cp /usr/bin/uuidgen initrd/usr/bin
 cp /usr/bin/curl initrd/usr/bin
+cp /usr/bin/pv initrd/usr/bin
 # copy shared objects
 cp /usr/lib/x86_64-linux-gnu/libfdisk.so.1 initrd/usr/lib/x86_64-linux-gnu/
 cp /usr/lib/x86_64-linux-gnu/libsmartcols.so.1 initrd/usr/lib/x86_64-linux-gnu/
@@ -100,6 +101,7 @@ cp /usr/lib/x86_64-linux-gnu/libtasn1.so.6 initrd/usr/lib/x86_64-linux-gnu/
 cp /usr/lib/x86_64-linux-gnu/libkeyutils.so.1 initrd/usr/lib/x86_64-linux-gnu/
 cp /usr/lib/x86_64-linux-gnu/libresolv.so.2 initrd/usr/lib/x86_64-linux-gnu/
 cp /usr/lib/x86_64-linux-gnu/libffi.so.8 initrd/usr/lib/x86_64-linux-gnu/
+cp /usr/lib/x86_64-linux-gnu/libc.so.6 initrd/usr/lib/x86_64-linux-gnu/
 # copy needed fs modules
 mkdir -p initrd/usr/lib/modules/$uname/kernel/fs/nls
 cp -a /usr/lib/modules/$uname/kernel/fs/fat initrd/usr/lib/modules/$uname/kernel/fs

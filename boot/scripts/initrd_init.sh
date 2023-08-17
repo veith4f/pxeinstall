@@ -178,7 +178,7 @@ nfsmount $mountpath /mnt/nfs
 end
 
 begin "Flashing Cloud-Image to disk"
-dd if=/mnt/nfs/$image of=$install_to
+dd if=/mnt/nfs/$image | pv | dd of=$install_to
 umount /mnt/nfs
 end
 

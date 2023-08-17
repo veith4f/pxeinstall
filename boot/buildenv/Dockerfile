@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     gettext \
     flex \
     curl \
-    bison
+    bison \
+    pv
 
 # get and build grub-2.06
 RUN cd /root && \
