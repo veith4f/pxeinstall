@@ -238,36 +238,7 @@ fi
 
 begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-BOOT=
-'''
-if [ "$config" == "cloudinit" ]; then # linux case
-  if [ -z "$(efibootmgr | grep Linux)" ]; then
-    mount $(ls ${install_to}* | sed '2q;d') /mnt
-    SHIM=$(find /mnt -name shimx64.efi | cut -d/ -f 3- | sed 's|/|\\|g' | head -n 1)
-    if [ ! -z "$SHIM" ]; then
-      efibootmgr --create --disk=$install_to --part=1 --label=Linux --loader=$SHIM
-    fi
-    umount /mnt
-  fi
-  BOOT=$(efibootmgr | grep Linux | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
-
-elif [ "$config" == "unattend" ]; then # windows case
-  if [ -z "$(efibootmgr | grep WinInstall)" ]; then
-    mount $(ls ${install_to}* | sed '5q;d') /mnt
-    BMGR="/mnt/bootmgr.efi"
-    if [ -f "$BMGR" ]; then
-      efibootmgr --create --disk=$install_to --part=4 --label=WinInstall --loader=$BMGR
-    fi
-    umount /mnt
-  fi
-  BOOT=$(efibootmgr | grep WinInstall | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
-
-else
-  log_msg "Setting boot order for config type '$config' is unsupported."
-
-fi
-'''
-BOOT=$(efibootmgr | grep -i HardDisk | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
+BOOT=$(efibootmgr | grep -E "HardDisk|Hard Drive|NVMe" | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 if [ ! -z "$BOOT" ]; then
   ORDER=$(efibootmgr | sed '3q;d' | cut -d' ' -f 2)
   efibootmgr -b $BOOT -a
