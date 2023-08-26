@@ -15,5 +15,4 @@ services:
         - ./output:/tftp:ro
         - ./test/secureboot:/secureboot:rw
         - ./test/run.sh:/run.sh:ro
-        - ./test/iso:/iso:ro
     command: /run.sh
