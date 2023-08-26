@@ -8,3 +8,12 @@ services:
         - ./sbkeys:/root/sbkeys:ro
         - ./conf:/root/conf:ro
     command: /root/scripts/mkstandalone.sh
+
+  test:
+    image: tianon/qemu:native-bookworm
+    volumes:
+        - ./output:/tftp:ro
+        - ./test/tmp:/tmp:rw
+        - ./test/run.sh:/run.sh:ro
+        - ./test/iso:/iso:ro
+    command: /run.sh

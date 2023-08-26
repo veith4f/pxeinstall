@@ -92,6 +92,10 @@ Create grub.cfg and gpg.cfg with default options. Will not overwrite existing fi
 make keys
 ```
 Generate sbkeys/db.key and sbkeys/db.cert. This is meant for testing.
+```
+make test
+```
+Launch signed bootloader, kernel and ramdisk in a test environment and run tests.
 
 
 Output

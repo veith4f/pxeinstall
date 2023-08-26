@@ -1,8 +1,0 @@
-services:
-  pxeinstall:
-    image: tianon/qemu:native-bookworm
-    volumes:
-        - ./tftp:/tftp:ro
-        - ./qemu:/qemu:ro
-        - ./disk:/disk:rw
-    command: /qemu/run.sh

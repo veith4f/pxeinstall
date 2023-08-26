@@ -17,14 +17,15 @@ config:
 
 .PHONY: build
 build:
-	@cp docker-compose.override.yml-template docker-compose.override.yml
-	@docker compose build
-	@rm docker-compose.override.yml
+	@docker build buildenv -t sopra/ipl/pxe-boot:1.0
 
 .PHONY: default
 default:
-	@[ ! -z "$(shell docker images | grep boot-buildenv)" ] || \
-		(cp docker-compose.override.yml-template docker-compose.override.yml \
-		&& docker compose build \
-		&& rm docker-compose.override.yml)
-	@docker compose up
+	@[ ! -z "$(shell docker images | grep sopra/ipl/pxe-boot)" ] || make build
+	@docker compose up buildenv
+
+.PHONY: test
+test:
+	@[ -f output/netboot.efi.signed ] || (echo Please run 'make' to generate required files for testing. && exit 1)
+	@docker-compose up test
+
