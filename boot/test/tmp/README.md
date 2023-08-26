@@ -1,1 +1,0 @@
-This folder is used as a docker volume for creation of a disk image during testing. The disk image size will be 512M so storage requirements are not too demanding.

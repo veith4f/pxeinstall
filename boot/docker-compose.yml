@@ -13,7 +13,7 @@ services:
     image: tianon/qemu:native-bookworm
     volumes:
         - ./output:/tftp:ro
-        - ./test/tmp:/tmp:rw
+        - ./test/data:/data:rw
         - ./test/run.sh:/run.sh:ro
         - ./test/iso:/iso:ro
     command: /run.sh
