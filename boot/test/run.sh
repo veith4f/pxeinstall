@@ -23,7 +23,7 @@ qemu-system-x86_64 \
     echo "##############################################################################" && \
     echo) &
 
-(sleep 40 && kill $(pidof qemu-system-x86_64) && kill $(pidof tail) && \
+(sleep 35 && kill $(pidof qemu-system-x86_64) && kill $(pidof tail) && \
     echo && \
     echo "##############################################################################" && \
     echo "Failure: Signed kernel not loaded" && \
