@@ -16,7 +16,7 @@ qemu-system-x86_64 \
     -boot n \
     $@ > /tmp/log.txt &
 
-(tail -f /tmp/log.txt | grep -q "BOOT_IMAGE=vmlinuz" && kill $(pidof qemu-system-x86_64) && kill $(pidof tail) && \
+(tail -f /tmp/log.txt | grep -q "BOOT_IMAGE=" && kill $(pidof qemu-system-x86_64) && kill $(pidof tail) && \
     echo && \
     echo "##############################################################################" && \
     echo "Success: Signed kernel loaded" && \
