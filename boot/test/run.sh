@@ -9,7 +9,7 @@ qemu-system-x86_64 \
     -machine q35,smm=on \
     -global driver=cfi.pflash01,property=secure,value=on \
     -drive if=pflash,format=raw,unit=0,file=/usr/share/OVMF/OVMF_CODE_4M.secboot.fd,readonly=on \
-    -drive if=pflash,format=raw,unit=1,file=/data/OVMF_VARS_4M.sopra.fd \
+    -drive if=pflash,format=raw,unit=1,file=/secureboot/OVMF_VARS_4M.sopra.fd \
     -nographic \
     -boot n \
     $@
