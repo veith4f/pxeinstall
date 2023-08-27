@@ -99,7 +99,7 @@ make config
 ```
 Create grub.cfg and gpg.cfg with default options. Will not overwrite existing files.
 ```
-make keys
+make sbkeys
 ```
 Generate sbkeys/db.key and sbkeys/db.cert. This is meant for testing.
 ```

@@ -3,8 +3,8 @@
 SUBJ="/CN=John Doe,O=Company/"
 VALIDITY=3650
 
-.PHONY: keys
-keys:
+.PHONY: sbkeys
+sbkeys:
 	@[ -f "$(shell which openssl)" ] || (echo "Please install 'openssl' to generate certificates." && exit 1)
 	@[ -f "sbkeys/db.key" ] || openssl req -new -x509 \
 		-newkey rsa:2048 -subj $(SUBJ) -keyout sbkeys/db.key \
