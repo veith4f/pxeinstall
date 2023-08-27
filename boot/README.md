@@ -41,6 +41,11 @@ Example:
 ```
 rebootefi="HardDisk|Hard Drive|NVMe"
 ```
+Kernel parameters: All known kernel parameters may also be applyed. See https://www.kernel.org/doc/html/v4.14/admin-guide/kernel-parameters.html for details. 
+Example:
+```
+console=ttyS0
+```
 
 Client-specific grub configuration files
 -----------------------

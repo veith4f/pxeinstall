@@ -27,5 +27,7 @@ default:
 .PHONY: test
 test:
 	@[ -f output/netboot.efi.signed ] || (echo Please run 'make' to generate required files for testing. && exit 1)
+	@[ -f conf/grub.cfg ] || cp conf/grub.cfg-template conf/grub.cfg 
+	@grep -q "console=ttyS0" conf/grub.cfg || (echo Please rebuild boot files with 'console=ttyS0' added to kernel cmdline in grub.cfg. && exit 1)
 	@docker-compose up test
 

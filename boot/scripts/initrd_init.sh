@@ -63,10 +63,10 @@ export starttime
 ## Parameters & Definitions
 
 export client=""
+export rebootefi="HardDisk|Hard Drive|NVMe"
 export hostconf=""
 export insecure=""
 export debug=""
-export rebootefi="HardDisk|Hard Drive|NVMe"
 
 # Parse command line options
 for x in $(cat /proc/cmdline); do
@@ -77,15 +77,15 @@ for x in $(cat /proc/cmdline); do
     client=*)
       client=${x#client=}
       ;;
+    rebootefi=*)
+      rebootefi=${x#rebootefi=}
+      ;;
     insecure)
       insecure="-k"
       ;;
     debug)
       debug="y"
-      ;;
-    rebootefi=
-      rebootefi=${x#rebootefi=}
-      ;;
+      ;;    
     esac
 done
 
