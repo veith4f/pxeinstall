@@ -66,6 +66,7 @@ export client=""
 export hostconf=""
 export insecure=""
 export debug=""
+export rebootefi="HardDisk|Hard Drive|NVMe"
 
 # Parse command line options
 for x in $(cat /proc/cmdline); do
@@ -81,6 +82,9 @@ for x in $(cat /proc/cmdline); do
       ;;
     debug)
       debug="y"
+      ;;
+    rebootefi=
+      rebootefi=${x#rebootefi=}
       ;;
     esac
 done
@@ -238,7 +242,7 @@ fi
 
 begin "Arrange EFI boot order to boot disk on next boot"
 mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-BOOT=$(efibootmgr | grep -E "HardDisk|Hard Drive|NVMe" | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
+BOOT=$(efibootmgr | grep -E "${rebootefi}" | cut -d'*' -f1 | tr -d '[:space:]' | tail -c 4 | head -n 1)
 if [ ! -z "$BOOT" ]; then
   ORDER=$(efibootmgr | sed '3q;d' | cut -d' ' -f 2)
   efibootmgr -b $BOOT -a

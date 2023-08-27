@@ -36,6 +36,11 @@ Example:
 ```
 insecure
 ```
+Parameter 'rebootefi' allows specifying the efi device, usually a hard disk the system will reboot from once an image has been flashed to disk and writing configuration files has finished. Regex as defined by 'grep -E' may be used to pick a device from output of command 'efibootmgr'. The device names correspond to those shown on EFI boot menu.
+Example:
+```
+rebootefi="HardDisk|Hard Drive|NVMe"
+```
 
 Client-specific grub configuration files
 -----------------------
@@ -50,7 +55,7 @@ menuentry "Debug Install of ee:4a:6a:a1:04:49" {
   echo "Please be patient ..."
   echo
 
-  linux vmlinuz hostconf=https://$some_ip_address client=${net_default_mac} insecure debug
+  linux vmlinuz hostconf=https://$some_ip_address client=${net_default_mac} insecure debug rebootefi="HardDisk|Hard Drive|NVMe"
   initrd "initrd.img"
 }
 ```
