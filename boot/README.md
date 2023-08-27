@@ -105,7 +105,7 @@ Generate sbkeys/db.key and sbkeys/db.cert. This is meant for testing.
 ```
 make test
 ```
-Launch signed bootloader, kernel and ramdisk in a test qemu environment. UEFI Secure Boot enabled boot process will run with custom key material generated via guide at https://scb.ignisplus.de/confluence/display/BAY/UEFI+Secure+Boot+with+Custom+Keys. Used custom key material is located in a binary file test/secureboot/OVMF_VARS_4M.sopra.fd. The idea of this test is to check if Secure Boot is working which is confirmed once booting kernel outputs kernel command line. If this event does not occur within 35 seconds the test fails.
+Launch signed bootloader, kernel and ramdisk in a test qemu environment. UEFI Secure Boot enabled boot process will run with custom key material generated via guide at https://scb.ignisplus.de/confluence/display/BAY/UEFI+Secure+Boot+with+Custom+Keys. Used custom key material is located in a binary file test/secureboot/OVMF_VARS_4M.sopra.fd. The idea of this test is to check if Secure Boot is working which is confirmed once booting kernel outputs kernel command line. If this event does not occur within 40 seconds the test fails.
 
 
 Output
