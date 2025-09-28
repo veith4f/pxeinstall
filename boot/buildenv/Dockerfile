@@ -1,4 +1,4 @@
-FROM debian:12
+FROM --platform=linux/amd64 debian:12
 
 # install deps
 RUN apt-get update && apt-get install -y \
